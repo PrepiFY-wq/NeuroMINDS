@@ -1261,94 +1261,101 @@
     };
   }
 
-  document.getElementById("btnSaveDay").addEventListener("click", async (e) => {
-    e.preventDefault();
-    const result = calculatePoints();
-    const payload = {
-      userId: currentUser.userId,
-      date: new Date().toISOString().slice(0, 10),
-      topicsText: topicsInput.value.trim(),
-      topicsCount: result.topicsCount,
-      hours: result.hours,
-      qTotal: result.qTotal,
-      qCorrect: result.qCorrect,
-      accuracy: result.accuracy,
-      points: result.totalPoints
-    };
+ document.getElementById("btnSaveDay").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const result = calculatePoints();
 
-    try {
-      const res = await fetch(`${BASE_URL}?path=dailyTargets`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!data.ok) {
-        alert("Save error: " + data.error);
-        return;
-      }
-      streakDays = data.newStreak;
-      streakDaysLabel.textContent = `${streakDays} days`;
-      currentUser.pointsTotal = data.newPointsTotal;
-      currentUser.streakDays = data.newStreak;
-      document.getElementById("userPoints").textContent = data.newPointsTotal;
-      document.getElementById("userStreak").textContent = data.newStreak;
-      localStorage.setItem("neuroUser", JSON.stringify(currentUser));
-      alert("Daily targets saved!");
-    } catch (err) {
-      console.error(err);
-      alert("Network error. Thodi der baad try karein.");
+  const formData = new FormData();
+  formData.append("path", "dailyTargets");
+  formData.append("userId", currentUser.userId);
+  formData.append("date", new Date().toISOString().slice(0, 10));
+  formData.append("topicsText", topicsInput.value.trim());
+  formData.append("topicsCount", result.topicsCount);
+  formData.append("hours", result.hours);
+  formData.append("qTotal", result.qTotal);
+  formData.append("qCorrect", result.qCorrect);
+  formData.append("accuracy", result.accuracy);
+  formData.append("points", result.totalPoints);
+
+  try {
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      body: formData
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert("Save error: " + data.error);
+      return;
     }
-  });
+    streakDays = data.newStreak;
+    streakDaysLabel.textContent = `${streakDays} days`;
+    currentUser.pointsTotal = data.newPointsTotal;
+    currentUser.streakDays = data.newStreak;
+    document.getElementById("userPoints").textContent = data.newPointsTotal;
+    document.getElementById("userStreak").textContent = data.newStreak;
+    localStorage.setItem("neuroUser", JSON.stringify(currentUser));
+    alert("Daily targets saved!");
+  } catch (err) {
+    console.error(err);
+    alert("Network error. Thodi der baad try karein.");
+  }
+});
 
   // ==== SYLLABUS SAVE/LOAD with backend ====
-  async function loadSyllabusProgress() {
-    try {
-      const res = await fetch(`${BASE_URL}?path=syllabusLoad`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser.userId })
-      });
-      const data = await res.json();
-      if (!data.ok) {
-        renderChapters();
-        return;
-      }
-      userProgress.physics = new Set(
-        data.physics ? data.physics.split(",").filter(Boolean) : []
-      );
-      userProgress.chemistry = new Set(
-        data.chemistry ? data.chemistry.split(",").filter(Boolean) : []
-      );
-      userProgress.biology = new Set(
-        data.biology ? data.biology.split(",").filter(Boolean) : []
-      );
-      renderChapters();
-    } catch (err) {
-      console.error("Syllabus load error", err);
-      renderChapters();
-    }
-  }
+async function loadSyllabusProgress() {
+  try {
+    const formData = new FormData();
+    formData.append("path", "syllabusLoad");
+    formData.append("userId", currentUser.userId);
 
-  async function saveSyllabusProgress() {
-    try {
-      const physicsKeys = Array.from(userProgress.physics);
-      const chemistryKeys = Array.from(userProgress.chemistry);
-      const biologyKeys = Array.from(userProgress.biology);
-      await fetch(`${BASE_URL}?path=syllabusSave`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          physics: physicsKeys.join(","),
-          chemistry: chemistryKeys.join(","),
-          biology: biologyKeys.join(",")
-        })
-      });
-    } catch (err) {
-      console.error("Syllabus save error", err);
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!data.ok) {
+      renderChapters();
+      return;
     }
+
+    userProgress.physics = new Set(
+      data.physics ? data.physics.split(",").filter(Boolean) : []
+    );
+    userProgress.chemistry = new Set(
+      data.chemistry ? data.chemistry.split(",").filter(Boolean) : []
+    );
+    userProgress.biology = new Set(
+      data.biology ? data.biology.split(",").filter(Boolean) : []
+    );
+    renderChapters();
+  } catch (err) {
+    console.error("Syllabus load error", err);
+    renderChapters();
   }
+}
+  async function saveSyllabusProgress() {
+  try {
+    const physicsKeys = Array.from(userProgress.physics);
+    const chemistryKeys = Array.from(userProgress.chemistry);
+    const biologyKeys = Array.from(userProgress.biology);
+
+    const formData = new FormData();
+    formData.append("path", "syllabusSave");
+    formData.append("userId", currentUser.userId);
+    formData.append("physics", physicsKeys.join(","));
+    formData.append("chemistry", chemistryKeys.join(","));
+    formData.append("biology", biologyKeys.join(","));
+
+    await fetch(BASE_URL, {
+      method: "POST",
+      body: formData
+    });
+  } catch (err) {
+    console.error("Syllabus save error", err);
+  }
+}
+
 
   // ==== 9. Leaderboard & Level info ====
   const monthShort = today.toLocaleString("en-IN", { month: "short" });
@@ -1380,38 +1387,44 @@
     levelNames[currentUser.level] || levelNames[1];
 
   async function loadLeaderboard(limit = 20) {
-    try {
-      const res = await fetch(`${BASE_URL}?path=leaderboard`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ limit })
-      });
-      const data = await res.json();
-      if (!data.ok) return;
-      const list = data.leaderboard || [];
-      const tbody = document.querySelector("#leaderboardTable tbody");
-      tbody.innerHTML = "";
-      list.slice(0, 5).forEach((r) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${r.rank}</td>
-          <td>${r.name}</td>
-          <td><span class="badge-small">L${r.level}</span></td>
-          <td>${r.points}</td>
-          <td>${r.streak}🔥</td>
-        `;
-        tbody.appendChild(tr);
-      });
-      const my = list.find((r) => r.userId === currentUser.userId);
-      if (my) {
-        currentUser.rank = my.rank;
-        document.getElementById("userRank").textContent = my.rank;
-        localStorage.setItem("neuroUser", JSON.stringify(currentUser));
-      }
-    } catch (err) {
-      console.error("Leaderboard load error", err);
+  try {
+    const formData = new FormData();
+    formData.append("path", "leaderboard");
+    formData.append("limit", limit);
+
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!data.ok) return;
+
+    const list = data.leaderboard || [];
+    const tbody = document.querySelector("#leaderboardTable tbody");
+    tbody.innerHTML = "";
+    list.slice(0, 5).forEach((r) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.rank}</td>
+        <td>${r.name}</td>
+        <td><span class="badge-small">L${r.level}</span></td>
+        <td>${r.points}</td>
+        <td>${r.streak}🔥</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    const my = list.find((r) => r.userId === currentUser.userId);
+    if (my) {
+      currentUser.rank = my.rank;
+      document.getElementById("userRank").textContent = my.rank;
+      localStorage.setItem("neuroUser", JSON.stringify(currentUser));
     }
+  } catch (err) {
+    console.error("Leaderboard load error", err);
   }
+}
 
   document.getElementById("viewMoreLeaderboard").addEventListener("click", () => {
     alert("Later: show full top 20 leaderboard in a modal/page.");
