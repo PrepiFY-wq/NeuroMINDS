@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuroNEET Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: rgba(15, 23, 42, 0.98);
+      --border: rgba(148, 163, 184, 0.5);
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.35), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.25), transparent 60%),
+        #020617;
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 12px 28px;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: conic-gradient(#22c55e, #38bdf8, #a855f7, #f97316, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 1.2rem;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.7);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-name {
+      font-family: "Poppins", sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      font-size: 1.1rem;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+    .top-middle {
+      flex: 1;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .top-right {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .top-right strong {
+      color: var(--text);
+      display: block;
+    }
+
+    /* LAYOUT */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1.1fr;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    @media (max-width: 960px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 10px 10px 12px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .card-subtitle {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    /* TABS LEFT (Candidates / Leaderboard / Syllabus / Streaks) */
+    .tab-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.76rem;
+      cursor: pointer;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .tab-btn.active {
+      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.9), rgba(15, 23, 42, 0.98));
+      color: #e5e7eb;
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .section-panel { display: none; }
+    .section-panel.active { display: block; }
+
+    /* TABLES */
+    .table-wrapper {
+      border-radius: 12px;
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      background: rgba(15, 23, 42, 0.98);
+      overflow: hidden;
+      font-size: 0.75rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 6px 6px;
+      text-align: left;
+    }
+    th {
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.9);
+      background: rgba(15, 23, 42, 1);
+    }
+    tbody tr:nth-child(odd) td {
+      background: rgba(15, 23, 42, 0.95);
+    }
+    tbody tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    /* BUTTONS */
+    .btn-sm {
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: none;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #22c55e, #38bdf8);
+      color: #020617;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.9);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 1);
+    }
+    .btn-danger {
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      color: #020617;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+    .badge-success {
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #bbf7d0;
+    }
+    .badge-pending {
+      border-color: rgba(249, 115, 22, 0.9);
+      color: #fed7aa;
+    }
+
+    .chip-level {
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      background: rgba(30, 64, 175, 0.9);
+      color: #e5e7eb;
+    }
+
+    /* RIGHT COLUMN SECTIONS */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      font-size: 0.78rem;
+    }
+    .summary-box {
+      border-radius: 12px;
+      padding: 6px 8px;
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.35), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148, 163, 184, 0.8);
+    }
+    .summary-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .summary-value {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 0.76rem;
+    }
+    .subject-summary {
+      border-radius: 12px;
+      padding: 6px 7px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .streak-search {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.76rem;
+      flex: 1;
+    }
+    .field label {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+    .field input, .field select {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 5px 7px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #e5e7eb;
+      outline: none;
+      font-size: 0.76rem;
+    }
+    .field input:focus, .field select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* MODAL for candidate view */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+    .modal {
+      background: #020617;
+      border-radius: 18px;
+      padding: 12px 12px 14px;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .modal-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .close-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .modal-body {
+      font-size: 0.78rem;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .detail-label {
+      color: var(--muted);
+    }
+    .detail-value {
+      font-weight: 500;
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="top-left">
+        <div class="logo-circle">N</div>
+        <div class="brand-text">
+          <div class="brand-name">NEURONEET ADMIN</div>
+          <div class="brand-sub">VERIFY • LEADERBOARD • SYLLABUS • STREAKS</div>
+        </div>
+      </div>
+      <div class="top-middle">
+        Logged in as: <strong>Admin</strong> • <span style="color:#93c5fd;">prepifycse@gmail.com</span><br/>
+        Use this panel to verify candidates, manage levels & restore streaks.
+      </div>
+      <div class="top-right">
+        <strong id="adminDate"></strong>
+        NEET (UG) 2026 Batch Admin Panel<br/>
+        <button class="btn-sm btn-ghost" onclick="alert('Implement logout logic (clear auth, redirect to index.html).');">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <main class="main-grid">
+      <!-- LEFT: Tabs -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Admin Controls</div>
+            <div class="card-subtitle">Registered candidates, leaderboard & syllabus overview</div>
+          </div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab-btn active" data-section="candidatesSection">Registered Candidates</button>
+          <button class="tab-btn" data-section="leaderboardSection">Leaderboard</button>
+          <button class="tab-btn" data-section="syllabusSection">Syllabus Tracker (All)</button>
+          <button class="tab-btn" data-section="streaksSection">Streak Restore</button>
+        </div>
+
+        <!-- Registered Candidates -->
+        <div class="section-panel active" id="candidatesSection">
+          <div class="card-subtitle" style="margin-bottom:4px;">
+            Verify candidates; on verify, send NEURONEET ID & password on their registered email.
+          </div>
+          <div class="table-wrapper">
+            <table id="candidatesTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>E‑Mail</th>
+                  <th>Studying</th>
+                  <th>Prep</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Sample row, replace with data from DB -->
+                <tr data-uid="uid_demo_1">
+                  <td>1</td>
+                  <td>Demo Aspirant</td>
+                  <td>demo@example.com</td>
+                  <td>Dropper</td>
+                  <td>Self</td>
+                  <td><span class="badge badge-pending">Pending</span></td>
+                  <td>
+                    <button class="btn-sm btn-ghost" onclick="openCandidateModal('uid_demo_1')">
+                      View
+                    </button>
+                  </td>
+                </tr>
+                <tr data-uid="uid_demo_2">
+                  <td>2</td>
+                  <td>Demo Student</td>
+                  <td>student@example.com</td>
+                  <td>12</td>
+                  <td>Coaching</td>
+                  <td><span class="badge badge-success">Verified</span></td>
+                  <td>
+                    <button class="btn-sm btn-ghost" onclick="openCandidateModal('uid_demo_2')">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="helper-text">
+            Tip: In full system, this table will load from database and support search by name / email.
+          </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="section-panel" id="leaderboardSection">
+          <div class="card-subtitle" style="margin-bottom:4px;">
+            Full leaderboard with ranks, topics, study hours, practice questions and points.
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div class="card-subtitle">
+              Cycle: <span id="lbCycleLabel">--</span>
+            </div>
+            <div>
+              <button class="btn-sm btn-ghost" onclick="alert('Implement date filter logic with DB query.');">
+                Filter by date
+              </button>
+              <button class="btn-sm btn-primary" onclick="alert('Implement recount logic on backend.');">
+                Recalculate Ranks
+              </button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table id="adminLeaderboardTable">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Level</th>
+                  <th>Topics</th>
+                  <th>Hours</th>
+                  <th>Questions (✓/✗)</th>
+                  <th>Points</th>
+                  <th>Streak</th>
+                  <th>Level Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Demo rows -->
+                <tr>
+                  <td>1</td>
+                  <td>Demo Topper</td>
+                  <td><span class="chip-level">L5</span></td>
+                  <td>120</td>
+                  <td>90</td>
+                  <td>820 / 900</td>
+                  <td>420</td>
+                  <td>15🔥</td>
+                  <td>
+                    <button class="btn-sm btn-primary" onclick="alert('Level up this student in DB.');">
+                      Level Up
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Demo Fighter</td>
+                  <td><span class="chip-level">L4</span></td>
+                  <td>110</td>
+                  <td>80</td>
+                  <td>780 / 880</td>
+                  <td>390</td>
+                  <td>13🔥</td>
+                  <td>
+                    <button class="btn-sm btn-ghost" onclick="alert('Keep same level in DB.');">
+                      Same
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Demo Consistent</td>
+                  <td><span class="chip-level">L3</span></td>
+                  <td>90</td>
+                  <td>70</td>
+                  <td>650 / 820</td>
+                  <td>340</td>
+                  <td>10🔥</td>
+                  <td>
+                    <button class="btn-sm btn-ghost" onclick="alert('Level down in DB if needed.');">
+                      Level Down
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="helper-text">
+            After 15 days, you can select top 5 candidates to Level Up and adjust others (Same / Level Down).
+          </div>
+        </div>
+
+        <!-- Syllabus tracker (all students) -->
+        <div class="section-panel" id="syllabusSection">
+          <div class="card-subtitle" style="margin-bottom:4px;">
+            PCB syllabus coverage summary for all students, ordered by rank/percentage.
+          </div>
+          <div class="table-wrapper">
+            <table id="syllabusAdminTable">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Physics %</th>
+                  <th>Chemistry %</th>
+                  <th>Biology %</th>
+                  <th>Overall %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Demo rows -->
+                <tr>
+                  <td>1</td>
+                  <td>Demo Topper</td>
+                  <td>80%</td>
+                  <td>75%</td>
+                  <td>82%</td>
+                  <td>79%</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Demo Aspirant</td>
+                  <td>70%</td>
+                  <td>68%</td>
+                  <td>74%</td>
+                  <td>71%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="helper-text">
+            In the full system, you will compute these percentages from user syllabus progress data for each subject.[file:1]
+          </div>
+        </div>
+
+        <!-- Streaks restore -->
+        <div class="section-panel" id="streaksSection">
+          <div class="card-subtitle" style="margin-bottom:4px;">
+            Restore / adjust streaks in case of genuine issues (internet problem, exam day, etc.).
+          </div>
+          <div class="streak-search">
+            <div class="field">
+              <label>Search by name / email</label>
+              <input type="text" id="streakSearchInput" placeholder="Type student name or email" />
+            </div>
+            <div style="display:flex; flex-direction:column; justify-content:flex-end; gap:4px;">
+              <button class="btn-sm btn-ghost" onclick="alert('Implement search in DB by name/email.');">
+                Search
+              </button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table id="streaksTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Current Streak</th>
+                  <th>Last Active Date</th>
+                  <th>New Streak</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Demo row -->
+                <tr>
+                  <td>Demo Aspirant</td>
+                  <td>0 days</td>
+                  <td>05 Apr 2026</td>
+                  <td>
+                    <input type="number" min="0" style="width:60px; font-size:0.72rem; padding:3px 4px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:rgba(15,23,42,0.96); color:#e5e7eb;" value="3" />
+                  </td>
+                  <td>
+                    <button class="btn-sm btn-primary" onclick="alert('Update streakDays for this user in DB.');">
+                      Restore Streak
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="helper-text">
+            Use this only when student has genuine reason; otherwise let streak system work automatically from daily targets.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Summary & Info -->
+      <section class="right-column">
+        <!-- Summary card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">System Summary</div>
+              <div class="card-subtitle">Quick stats for this cycle</div>
+            </div>
+            <div class="card-subtitle" id="summaryCycleLabel">--</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-box">
+              <div class="summary-label">Total registered</div>
+              <div class="summary-value" id="sumRegistered">0</div>
+            </div>
+            <div class="summary-box">
+              <div class="summary-label">Verified candidates</div>
+              <div class="summary-value" id="sumVerified">0</div>
+            </div>
+            <div class="summary-box">
+              <div class="summary-label">Active today</div>
+              <div class="summary-value" id="sumActiveToday">0</div>
+            </div>
+          </div>
+          <div class="subjects-grid">
+            <div class="subject-summary">
+              <div class="summary-label">Physics average</div>
+              <div class="summary-value" id="avgPhysics">0%</div>
+            </div>
+            <div class="subject-summary">
+              <div class="summary-label">Chemistry average</div>
+              <div class="summary-value" id="avgChemistry">0%</div>
+            </div>
+            <div class="subject-summary">
+              <div class="summary-label">Biology average</div>
+              <div class="summary-value" id="avgBiology">0%</div>
+            </div>
+          </div>
+          <div class="helper-text">
+            Connect these stats to your database (count registered/verified users & compute AVG syllabus % per subject).[file:1]
+          </div>
+        </div>
+
+        <!-- Info / instructions card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Admin Guidelines</div>
+              <div class="card-subtitle">How to use NeuroNEET admin dashboard</div>
+            </div>
+          </div>
+          <ul style="font-size:0.76rem; color:#cbd5e1; padding-left:18px; margin-top:2px; line-height:1.45;">
+            <li>Verify each new registration and send NEURONEET ID + password via email.</li>
+            <li>Every 15 days, open Leaderboard, recalculate ranks and promote top 5 to next level.</li>
+            <li>Use Syllabus Tracker (All) to see PCB coverage and identify students who are behind.</li>
+            <li>Use Streak Restore only when there is a genuine reason for a break.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      NeuroNEET Admin • Manage NEET aspirants’ progress, levels & streaks with one panel.[file:1]
+    </footer>
+  </div>
+
+  <!-- Candidate detail modal -->
+  <div class="modal-backdrop" id="candidateModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Candidate Details</div>
+        <button class="close-btn" onclick="closeCandidateModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-row">
+          <div class="detail-label">Name</div>
+          <div class="detail-value" id="candName">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Father's Name</div>
+          <div class="detail-value" id="candFather">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Date of Birth</div>
+          <div class="detail-value" id="candDob">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Preparation</div>
+          <div class="detail-value" id="candPreparation">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Studying</div>
+          <div class="detail-value" id="candStudying">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Email</div>
+          <div class="detail-value" id="candEmail">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Contact</div>
+          <div class="detail-value" id="candContact">--</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Status</div>
+          <div class="detail-value" id="candStatus">Pending</div>
+        </div>
+        <div class="helper-text">
+          On Verify, system should generate a user ID (e.g. NEET2026‑001) & password, save in DB and send email automatically.
+        </div>
+        <div style="margin-top:8px; display:flex; gap:6px;">
+          <button class="btn-sm btn-primary" onclick="verifyCandidate()">
+            Verify & Send Email
+          </button>
+          <button class="btn-sm btn-ghost" onclick="closeCandidateModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Basic date & cycle info
+    const today = new Date();
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('adminDate').textContent = today.toLocaleDateString('en-IN', dateOptions);
+
+    const monthShort = today.toLocaleString("en-IN", { month: "short" });
+    const day = today.getDate();
+    const cycleStart = day <= 15 ? 1 : 16;
+    const cycleEnd = day <= 15 ? 15 : new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const cycleText = `${cycleStart}–${cycleEnd} ${monthShort} ${today.getFullYear()}`;
+
+    document.getElementById('lbCycleLabel').textContent = cycleText;
+    document.getElementById('summaryCycleLabel').textContent = cycleText;
+
+    // Dummy summary stats (replace with DB values)
+    document.getElementById('sumRegistered').textContent = 2;
+    document.getElementById('sumVerified').textContent = 1;
+    document.getElementById('sumActiveToday').textContent = 1;
+    document.getElementById('avgPhysics').textContent = "60%";
+    document.getElementById('avgChemistry').textContent = "55%";
+    document.getElementById('avgBiology').textContent = "65%";
+
+    // Tabs switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.getAttribute("data-section");
+        document.querySelectorAll(".section-panel").forEach(sec => {
+          sec.classList.toggle("active", sec.id === target);
+        });
+      });
+    });
+
+    // Candidate modal demo data
+    const demoCandidates = {
+      "uid_demo_1": {
+        name: "Demo Aspirant",
+        father: "Demo Father",
+        dob: "2006-03-10",
+        preparation: "Self",
+        studying: "Dropper",
+        email: "demo@example.com",
+        contact: "9999999999",
+        status: "Pending"
+      },
+      "uid_demo_2": {
+        name: "Demo Student",
+        father: "Demo Father 2",
+        dob: "2007-07-15",
+        preparation: "Coaching",
+        studying: "12",
+        email: "student@example.com",
+        contact: "8888888888",
+        status: "Verified"
+      }
+    };
+
+    let currentCandidateUid = null;
+    const candidateModal = document.getElementById("candidateModal");
+
+    function openCandidateModal(uid) {
+      currentCandidateUid = uid;
+      const data = demoCandidates[uid];
+      if (!data) return;
+      document.getElementById("candName").textContent = data.name;
+      document.getElementById("candFather").textContent = data.father;
+      document.getElementById("candDob").textContent = data.dob;
+      document.getElementById("candPreparation").textContent = data.preparation;
+      document.getElementById("candStudying").textContent = data.studying;
+      document.getElementById("candEmail").textContent = data.email;
+      document.getElementById("candContact").textContent = data.contact;
+      document.getElementById("candStatus").textContent = data.status;
+      candidateModal.style.display = "flex";
+    }
+
+    function closeCandidateModal() {
+      candidateModal.style.display = "none";
+      currentCandidateUid = null;
+    }
+
+    function verifyCandidate() {
+      if (!currentCandidateUid) return;
+      // In real app: update DB, generate ID + password, send email
+      alert("Verification triggered. Implement backend to set verified=true & email login details.");
+      document.getElementById("candStatus").textContent = "Verified";
+      closeCandidateModal();
+    }
+
+    candidateModal.addEventListener("click", (e) => {
+      if (e.target === candidateModal) closeCandidateModal();
+    });
+  </script>
+</body>
+</html>
