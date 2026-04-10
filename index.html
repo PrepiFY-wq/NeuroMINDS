@@ -823,7 +823,7 @@
         const data = await postForm(payload);
         if (data.ok) {
           alert(
-            "Registration submitted! Admin verify karega, phir email se ID/password aayega.\nReg ID: " +
+            "Registration submitted! Registration submitted! Admin will verify your details, then your ID and password will be sent to you by email.\nReg ID: " +
               data.regId
           );
           e.target.reset();
@@ -832,7 +832,7 @@
           alert("Error: " + data.error);
         }
       } catch (err) {
-        alert("Network error. Thodi der baad try karein.");
+        alert("Network error. Please try again later");
         console.error(err);
       }
     });
@@ -860,7 +860,7 @@
         closeModal(loginModal);
         window.location.href = "dashboard.html";
       } catch (err) {
-        alert("Network error. Thodi der baad try karein.");
+        alert("Network error. Please try again later");
         console.error(err);
       }
     });
@@ -892,7 +892,7 @@
         closeModal(adminModal);
         window.location.href = "admin.html";
       } catch (err) {
-        alert("Network error. Thodi der baad try karein.");
+        alert("Network error. Please try again later");
         console.error(err);
       }
     });
