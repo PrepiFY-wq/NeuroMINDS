@@ -798,10 +798,21 @@
       });
     });
 
+    // Helper for POST (form-encoded, no CORS preflight)
+    async function postForm(payload) {
+      const res = await fetch(BASE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(payload).toString()
+      });
+      return res.json();
+    }
+
     // ==== REGISTRATION → Sheets backend ====
     document.getElementById("registerForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const payload = {
+        path: "register",
         name: document.getElementById("regName").value.trim(),
         fatherName: document.getElementById("regFatherName").value.trim(),
         dob: document.getElementById("regDob").value,
@@ -811,14 +822,12 @@
         contact: document.getElementById("regContact").value.trim()
       };
       try {
-        const res = await fetch(`${BASE_URL}?path=register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
+        const data = await postForm(payload);
         if (data.ok) {
-          alert("Registration submitted! Admin verify karega, phir email se ID/password aayega.\nReg ID: " + data.regId);
+          alert(
+            "Registration submitted! Admin verify karega, phir email se ID/password aayega.\nReg ID: " +
+              data.regId
+          );
           e.target.reset();
           closeModal(registerModal);
         } else {
@@ -836,13 +845,14 @@
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
 
+      const payload = {
+        path: "login",
+        email,
+        password
+      };
+
       try {
-        const res = await fetch(`${BASE_URL}?path=login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
+        const data = await postForm(payload);
         if (!data.ok) {
           alert("Login failed: " + data.error);
           return;
@@ -863,13 +873,14 @@
       const email = document.getElementById("adminEmail").value.trim();
       const password = document.getElementById("adminPassword").value;
 
+      const payload = {
+        path: "login",
+        email,
+        password
+      };
+
       try {
-        const res = await fetch(`${BASE_URL}?path=login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
+        const data = await postForm(payload);
         if (!data.ok) {
           alert("Admin login failed: " + data.error);
           return;
