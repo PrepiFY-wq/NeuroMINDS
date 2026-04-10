@@ -931,499 +931,498 @@
     </footer>
   </div>
 
-  <script>
-    // ==== CONFIG: Apps Script backend URL ====
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
+ <script>
+  // ==== CONFIG: Apps Script backend URL ====
+  const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
 
-    // ==== 1. DATE, DAY, QUOTE ====
-    const today = new Date();
-    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('dateInfo').textContent = today.toLocaleDateString('en-IN', dateOptions);
-    document.getElementById('targetsDate').textContent = today.toLocaleDateString('en-IN');
+  // ==== 1. DATE, DAY, QUOTE ====
+  const today = new Date();
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('dateInfo').textContent = today.toLocaleDateString('en-IN', dateOptions);
+  document.getElementById('targetsDate').textContent = today.toLocaleDateString('en-IN');
 
-    const quotes = [
-      "Dream NEET, work NEET, live NEET – the rank will follow.",
-      "Every MCQ solved is a step closer to your MBBS seat.",
-      "You win NEET not in one day, but in what you repeat every day.",
-      "Focus, practice, revise – the holy trinity of NEET success.",
-      "Turn your weaknesses into your strongest chapters.",
-      "Let your effort make your NEET rank inevitable."
-    ];
-    const quoteIndex = today.getDate() % quotes.length;
-    document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
+  const quotes = [
+    "Dream NEET, work NEET, live NEET – the rank will follow.",
+    "Every MCQ solved is a step closer to your MBBS seat.",
+    "You win NEET not in one day, but in what you repeat every day.",
+    "Focus, practice, revise – the holy trinity of NEET success.",
+    "Turn your weaknesses into your strongest chapters.",
+    "Let your effort make your NEET rank inevitable."
+  ];
+  const quoteIndex = today.getDate() % quotes.length;
+  document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
 
-    // ==== 2. Logged in user from localStorage ====
-    const storedUser = JSON.parse(localStorage.getItem("neuroUser") || "null");
-    if (!storedUser || !storedUser.userId) {
-      alert("Session expired. Please login again.");
-      window.location.href = "index.html";
+  // ==== 2. Logged in user from localStorage ====
+  const storedUser = JSON.parse(localStorage.getItem("neuroUser") || "null");
+  if (!storedUser || !storedUser.userId) {
+    alert("Session expired. Please login again.");
+    window.location.href = "index.html";
+  }
+
+  const currentUser = storedUser || {
+    name: "NeuroNEET Aspirant",
+    level: 1,
+    rank: "--",
+    pointsTotal: 0,
+    streakDays: 0
+  };
+
+  document.getElementById('userName').textContent = currentUser.name || "NeuroNEET Aspirant";
+  document.getElementById('userLevel').textContent = currentUser.level || 1;
+  document.getElementById('userRank').textContent = currentUser.rank || "--";
+  document.getElementById('userPoints').textContent = currentUser.pointsTotal || 0;
+  document.getElementById('userStreak').textContent = currentUser.streakDays || 0;
+
+  // ==== 3. Syllabus data (demo) ====
+  const syllabusData = {
+    physics: {
+      name: "Physics",
+      chapters: [
+        {
+          id: "phy_u1",
+          unit: 1,
+          title: "Physics and Measurement",
+          topics: [
+            "Units of measurement & SI system",
+            "Fundamental & derived units",
+            "Least count & errors in measurement",
+            "Significant figures",
+            "Dimensions of physical quantities",
+            "Dimensional analysis & its applications"
+          ]
+        },
+        {
+          id: "phy_u2",
+          unit: 2,
+          title: "Kinematics",
+          topics: [
+            "Frame of reference",
+            "Motion in a straight line",
+            "Position-time graph",
+            "Speed & velocity",
+            "Uniform & non-uniform motion",
+            "Uniformly accelerated motion",
+            "Scalars & vectors",
+            "Projectile motion",
+            "Uniform circular motion"
+          ]
+        }
+      ]
+    },
+    chemistry: {
+      name: "Chemistry",
+      chapters: [
+        {
+          id: "chem_u1",
+          unit: 1,
+          title: "Some Basic Concepts of Chemistry",
+          topics: [
+            "Matter & its nature",
+            "Dalton's atomic theory",
+            "Laws of chemical combination",
+            "Mole concept & molar mass",
+            "Percentage composition",
+            "Empirical & molecular formula",
+            "Stoichiometry"
+          ]
+        },
+        {
+          id: "chem_u2",
+          unit: 2,
+          title: "Atomic Structure",
+          topics: [
+            "Electromagnetic radiation",
+            "Photoelectric effect",
+            "Hydrogen spectrum",
+            "Bohr model & limitations",
+            "Dual nature of matter",
+            "Heisenberg uncertainty principle",
+            "Quantum numbers & orbitals"
+          ]
+        }
+      ]
+    },
+    biology: {
+      name: "Biology",
+      chapters: [
+        {
+          id: "bio_u1",
+          unit: 1,
+          title: "Diversity in Living World",
+          topics: [
+            "What is living? & biodiversity",
+            "Need for classification",
+            "Five kingdom classification",
+            "Monera, Protista, Fungi – features",
+            "Plant groups – Algae, Bryophytes, Pteridophytes, Gymnosperms",
+            "Animal phyla & chordate classes"
+          ]
+        },
+        {
+          id: "bio_u2",
+          unit: 2,
+          title: "Structural Organisation in Animals and Plants",
+          topics: [
+            "Morphology & anatomy of flowering plants",
+            "Root, stem, leaf & inflorescence",
+            "Family examples (Malvaceae, Cruciferae, Leguminosae, etc.)",
+            "Animal tissues",
+            "Frog systems – digestive, circulatory, respiratory, nervous, reproductive"
+          ]
+        }
+      ]
     }
+  };
 
-    const currentUser = storedUser || {
-      name: "NeuroNEET Aspirant",
-      level: 1,
-      rank: "--",
-      pointsTotal: 0,
-      streakDays: 0
-    };
+  // userProgress: Sets of completed keys
+  const userProgress = {
+    physics: new Set(),
+    chemistry: new Set(),
+    biology: new Set()
+  };
 
-    document.getElementById('userName').textContent = currentUser.name || "NeuroNEET Aspirant";
-    document.getElementById('userLevel').textContent = currentUser.level || 1;
-    document.getElementById('userRank').textContent = currentUser.rank || "--";
-    document.getElementById('userPoints').textContent = currentUser.pointsTotal || 0;
-    document.getElementById('userStreak').textContent = currentUser.streakDays || 0;
+  let currentSubjectKey = "physics";
+  let currentChapterId = null;
 
-    // ==== 3. Syllabus data (short demo) ====
-    const syllabusData = {
-      physics: {
-        name: "Physics",
-        chapters: [
-          {
-            id: "phy_u1",
-            unit: 1,
-            title: "Physics and Measurement",
-            topics: [
-              "Units of measurement & SI system",
-              "Fundamental & derived units",
-              "Least count & errors in measurement",
-              "Significant figures",
-              "Dimensions of physical quantities",
-              "Dimensional analysis & its applications"
-            ]
-          },
-          {
-            id: "phy_u2",
-            unit: 2,
-            title: "Kinematics",
-            topics: [
-              "Frame of reference",
-              "Motion in a straight line",
-              "Position-time graph",
-              "Speed & velocity",
-              "Uniform & non-uniform motion",
-              "Uniformly accelerated motion",
-              "Scalars & vectors",
-              "Projectile motion",
-              "Uniform circular motion"
-            ]
-          }
-        ]
-      },
-      chemistry: {
-        name: "Chemistry",
-        chapters: [
-          {
-            id: "chem_u1",
-            unit: 1,
-            title: "Some Basic Concepts of Chemistry",
-            topics: [
-              "Matter & its nature",
-              "Dalton's atomic theory",
-              "Laws of chemical combination",
-              "Mole concept & molar mass",
-              "Percentage composition",
-              "Empirical & molecular formula",
-              "Stoichiometry"
-            ]
-          },
-          {
-            id: "chem_u2",
-            unit: 2,
-            title: "Atomic Structure",
-            topics: [
-              "Electromagnetic radiation",
-              "Photoelectric effect",
-              "Hydrogen spectrum",
-              "Bohr model & limitations",
-              "Dual nature of matter",
-              "Heisenberg uncertainty principle",
-              "Quantum numbers & orbitals"
-            ]
-          }
-        ]
-      },
-      biology: {
-        name: "Biology",
-        chapters: [
-          {
-            id: "bio_u1",
-            unit: 1,
-            title: "Diversity in Living World",
-            topics: [
-              "What is living? & biodiversity",
-              "Need for classification",
-              "Five kingdom classification",
-              "Monera, Protista, Fungi – features",
-              "Plant groups – Algae, Bryophytes, Pteridophytes, Gymnosperms",
-              "Animal phyla & chordate classes"
-            ]
-          },
-          {
-            id: "bio_u2",
-            unit: 2,
-            title: "Structural Organisation in Animals and Plants",
-            topics: [
-              "Morphology & anatomy of flowering plants",
-              "Root, stem, leaf & inflorescence",
-              "Family examples (Malvaceae, Cruciferae, Leguminosae, etc.)",
-              "Animal tissues",
-              "Frog systems – digestive, circulatory, respiratory, nervous, reproductive"
-            ]
-          }
-        ]
+  // ==== SYLLABUS: helpers ====
+  function renderChapters() {
+    const subject = syllabusData[currentSubjectKey];
+    const list = document.getElementById("chapterList");
+    list.innerHTML = "";
+    subject.chapters.forEach(ch => {
+      const totalTopics = ch.topics.length;
+      let completedCount = 0;
+      ch.topics.forEach((_, idx) => {
+        const key = `${ch.id}_${idx}`;
+        if (userProgress[currentSubjectKey].has(key)) completedCount++;
+      });
+      const div = document.createElement("div");
+      div.className = "chapter-item";
+      div.dataset.chapterId = ch.id;
+      div.innerHTML = `
+        <div>
+          <div class="chapter-title">${ch.title}</div>
+          <div class="chapter-meta">${completedCount}/${totalTopics} topics completed</div>
+        </div>
+        <div class="badge-small">Unit ${ch.unit}</div>
+      `;
+      div.addEventListener("click", () => {
+        currentChapterId = ch.id;
+        renderTopics(ch);
+      });
+      list.appendChild(div);
+    });
+    updateSubjectCompletion();
+    document.getElementById("selectedSubjectLabel").textContent = subject.name;
+  }
+
+  function renderTopics(chapter) {
+    const panel = document.getElementById("topicsPanel");
+    panel.style.display = "grid";
+    const remaining = document.getElementById("remainingTopics");
+    const completed = document.getElementById("completedTopics");
+    remaining.innerHTML = "";
+    completed.innerHTML = "";
+
+    let remainingCount = 0;
+    let completedCount = 0;
+
+    chapter.topics.forEach((topicText, idx) => {
+      const key = `${chapter.id}_${idx}`;
+      const isDone = userProgress[currentSubjectKey].has(key);
+
+      const item = document.createElement("div");
+      item.className = "topic-item";
+      const ck = document.createElement("input");
+      ck.type = "checkbox";
+      ck.checked = isDone;
+      ck.addEventListener("change", () => {
+        if (ck.checked) userProgress[currentSubjectKey].add(key);
+        else userProgress[currentSubjectKey].delete(key);
+        renderChapters();
+        renderTopics(chapter);
+        saveSyllabusProgress(); // auto-save on change
+      });
+      const label = document.createElement("div");
+      label.textContent = topicText;
+
+      item.appendChild(ck);
+      item.appendChild(label);
+
+      if (isDone) {
+        completed.appendChild(item);
+        completedCount++;
+      } else {
+        remaining.appendChild(item);
+        remainingCount++;
       }
-    };
+    });
 
-    // userProgress: Sets of completed keys
-    const userProgress = {
-      physics: new Set(),
-      chemistry: new Set(),
-      biology: new Set()
-    };
+    document.getElementById("remainingCount").textContent = `(${remainingCount})`;
+    document.getElementById("completedCount").textContent = `(${completedCount})`;
+  }
 
-    let currentSubjectKey = "physics";
-    let currentChapterId = null;
-
-    // ==== SYLLABUS: helpers ====
-    function renderChapters() {
-      const subject = syllabusData[currentSubjectKey];
-      const list = document.getElementById("chapterList");
-      list.innerHTML = "";
+  function updateSubjectCompletion() {
+    ["physics", "chemistry", "biology"].forEach(subKey => {
+      const subject = syllabusData[subKey];
+      let totalTopics = 0;
+      let completedTopics = 0;
       subject.chapters.forEach(ch => {
-        const totalTopics = ch.topics.length;
-        let completedCount = 0;
+        totalTopics += ch.topics.length;
         ch.topics.forEach((_, idx) => {
           const key = `${ch.id}_${idx}`;
-          if (userProgress[currentSubjectKey].has(key)) completedCount++;
+          if (userProgress[subKey].has(key)) completedTopics++;
         });
-        const div = document.createElement("div");
-        div.className = "chapter-item";
-        div.dataset.chapterId = ch.id;
-        div.innerHTML = `
-          <div>
-            <div class="chapter-title">${ch.title}</div>
-            <div class="chapter-meta">${completedCount}/${totalTopics} topics completed</div>
-          </div>
-          <div class="badge-small">Unit ${ch.unit}</div>
-        `;
-        div.addEventListener("click", () => {
-          currentChapterId = ch.id;
-          renderTopics(ch);
-        });
-        list.appendChild(div);
       });
-      updateSubjectCompletion();
-      document.getElementById("selectedSubjectLabel").textContent = subject.name;
-    }
-
-    function renderTopics(chapter) {
-      const panel = document.getElementById("topicsPanel");
-      panel.style.display = "grid";
-      const remaining = document.getElementById("remainingTopics");
-      const completed = document.getElementById("completedTopics");
-      remaining.innerHTML = "";
-      completed.innerHTML = "";
-
-      let remainingCount = 0;
-      let completedCount = 0;
-
-      chapter.topics.forEach((topicText, idx) => {
-        const key = `${chapter.id}_${idx}`;
-        const isDone = userProgress[currentSubjectKey].has(key);
-
-        const item = document.createElement("div");
-        item.className = "topic-item";
-        const ck = document.createElement("input");
-        ck.type = "checkbox";
-        ck.checked = isDone;
-        ck.addEventListener("change", () => {
-          if (ck.checked) userProgress[currentSubjectKey].add(key);
-          else userProgress[currentSubjectKey].delete(key);
-          renderChapters();
-          renderTopics(chapter);
-          saveSyllabusProgress(); // auto-save on change
-        });
-        const label = document.createElement("div");
-        label.textContent = topicText;
-
-        item.appendChild(ck);
-        item.appendChild(label);
-
-        if (isDone) {
-          completed.appendChild(item);
-          completedCount++;
-        } else {
-          remaining.appendChild(item);
-          remainingCount++;
-        }
-      });
-
-      document.getElementById("remainingCount").textContent = `(${remainingCount})`;
-      document.getElementById("completedCount").textContent = `(${completedCount})`;
-    }
-
-    function updateSubjectCompletion() {
-      ["physics", "chemistry", "biology"].forEach(subKey => {
-        const subject = syllabusData[subKey];
-        let totalTopics = 0;
-        let completedTopics = 0;
-        subject.chapters.forEach(ch => {
-          totalTopics += ch.topics.length;
-          ch.topics.forEach((_, idx) => {
-            const key = `${ch.id}_${idx}`;
-            if (userProgress[subKey].has(key)) completedTopics++;
-          });
-        });
-        const percent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
-        const labelId = subKey + "Progress";
-        const el = document.getElementById(labelId);
-        if (el) el.textContent = percent + "%";
-        if (subKey === currentSubjectKey) {
-          document.getElementById("subjectCompletionPercent").textContent = percent + "%";
-        }
-      });
-
-      const phy = parseInt(document.getElementById("physicsProgress").textContent) || 0;
-      const chem = parseInt(document.getElementById("chemistryProgress").textContent) || 0;
-      const bio = parseInt(document.getElementById("biologyProgress").textContent) || 0;
-      const overall = Math.round((phy + chem + bio) / 3);
-      document.getElementById("overallCompletion").textContent = overall + "%";
-    }
-
-    document.querySelectorAll(".subject-card").forEach(card => {
-      card.addEventListener("click", () => {
-        currentSubjectKey = card.dataset.subject;
-        currentChapterId = null;
-        document.getElementById("topicsPanel").style.display = "none";
-        renderChapters();
-      });
-    });
-
-    // ==== DAILY TARGETS ====
-    const topicsInput = document.getElementById("targetsTopics");
-    const hoursInput = document.getElementById("targetsHours");
-    const qInput = document.getElementById("targetsQuestions");
-    const correctInput = document.getElementById("targetsCorrect");
-    const incorrectInput = document.getElementById("targetsIncorrect");
-
-    const pointsTopicsLabel = document.getElementById("pointsTopics");
-    const pointsHoursLabel = document.getElementById("pointsHours");
-    const accuracyPercentLabel = document.getElementById("accuracyPercent");
-    const pointsQuestionsLabel = document.getElementById("pointsQuestions");
-    const pointsTotalTodayLabel = document.getElementById("pointsTotalToday");
-    const streakDaysLabel = document.getElementById("streakDaysLabel");
-
-    let streakDays = currentUser.streakDays || 0;
-
-    function calculatePoints() {
-      const topicsText = topicsInput.value.trim();
-      const topicsCount = topicsText
-        ? topicsText.split(/[,;\n]/).map(t => t.trim()).filter(t => t.length > 0).length
-        : 0;
-      const hours = parseFloat(hoursInput.value) || 0;
-      const qTotal = parseInt(qInput.value) || 0;
-      const qCorrect = parseInt(correctInput.value) || 0;
-      const qIncorrect = Math.max(qTotal - qCorrect, 0);
-      incorrectInput.value = qIncorrect;
-
-      const topicsPoints = topicsCount;
-      const hoursPoints = hours;
-      let accuracy = 0;
-      if (qTotal > 0) accuracy = (qCorrect / qTotal) * 100;
-      let questionsPoints = 0;
-      if (accuracy >= 90) questionsPoints = 3;
-      else if (accuracy >= 80) questionsPoints = 2;
-      else if (accuracy >= 70) questionsPoints = 1;
-      else if (accuracy >= 60) questionsPoints = 0;
-      else if (accuracy >= 50) questionsPoints = -1;
-      else if (accuracy >= 40) questionsPoints = -2;
-      else if (accuracy > 0) questionsPoints = -3;
-
-      const totalPoints = topicsPoints + hoursPoints + questionsPoints;
-
-      pointsTopicsLabel.textContent = topicsPoints.toFixed(1);
-      pointsHoursLabel.textContent = hoursPoints.toFixed(1);
-      accuracyPercentLabel.textContent = accuracy.toFixed(1) + "%";
-      pointsQuestionsLabel.textContent = questionsPoints.toString();
-      pointsTotalTodayLabel.textContent = totalPoints.toFixed(1);
-
-      return {
-        totalPoints,
-        topicsPoints,
-        hoursPoints,
-        questionsPoints,
-        accuracy,
-        topicsCount,
-        hours,
-        qTotal,
-        qCorrect
-      };
-    }
-
-    document.getElementById("btnCalculatePoints").addEventListener("click", (e) => {
-      e.preventDefault();
-      calculatePoints();
-    });
-
-    document.getElementById("btnSaveDay").addEventListener("click", async (e) => {
-      e.preventDefault();
-      const result = calculatePoints();
-      const payload = {
-        userId: currentUser.userId,
-        date: new Date().toISOString().slice(0, 10),
-        topicsText: topicsInput.value.trim(),
-        topicsCount: result.topicsCount,
-        hours: result.hours,
-        qTotal: result.qTotal,
-        qCorrect: result.qCorrect,
-        accuracy: result.accuracy,
-        points: result.totalPoints
-      };
-
-      try {
-        const res = await fetch(`${BASE_URL}?path=dailyTargets`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (!data.ok) {
-          alert("Save error: " + data.error);
-          return;
-        }
-        streakDays = data.newStreak;
-        streakDaysLabel.textContent = `${streakDays} days`;
-        currentUser.pointsTotal = data.newPointsTotal;
-        currentUser.streakDays = data.newStreak;
-        document.getElementById("userPoints").textContent = data.newPointsTotal;
-        document.getElementById("userStreak").textContent = data.newStreak;
-        localStorage.setItem("neuroUser", JSON.stringify(currentUser));
-        alert("Daily targets saved!");
-      } catch (err) {
-        console.error(err);
-        alert("Network error. Thodi der baad try karein.");
+      const percent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+      const labelId = subKey + "Progress";
+      const el = document.getElementById(labelId);
+      if (el) el.textContent = percent + "%";
+      if (subKey === currentSubjectKey) {
+        document.getElementById("subjectCompletionPercent").textContent = percent + "%";
       }
     });
 
-    // ==== SYLLABUS SAVE/LOAD with backend ====
-    async function loadSyllabusProgress() {
-      try {
-        const res = await fetch(`${BASE_URL}?path=syllabusLoad`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: currentUser.userId })
-        });
-        const data = await res.json();
-        if (!data.ok) return;
-        userProgress.physics = new Set(
-          data.physics ? data.physics.split(",").filter(Boolean) : []
-        );
-        userProgress.chemistry = new Set(
-          data.chemistry ? data.chemistry.split(",").filter(Boolean) : []
-        );
-        userProgress.biology = new Set(
-          data.biology ? data.biology.split(",").filter(Boolean) : []
-        );
-        renderChapters();
-      } catch (err) {
-        console.error("Syllabus load error", err);
-        renderChapters();
-      }
-    }
+    const phy = parseInt(document.getElementById("physicsProgress").textContent) || 0;
+    const chem = parseInt(document.getElementById("chemistryProgress").textContent) || 0;
+    const bio = parseInt(document.getElementById("biologyProgress").textContent) || 0;
+    const overall = Math.round((phy + chem + bio) / 3);
+    document.getElementById("overallCompletion").textContent = overall + "%";
+  }
 
-    async function saveSyllabusProgress() {
-      try {
-        const physicsKeys = Array.from(userProgress.physics);
-        const chemistryKeys = Array.from(userProgress.chemistry);
-        const biologyKeys = Array.from(userProgress.biology);
-        await fetch(`${BASE_URL}?path=syllabusSave`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: currentUser.userId,
-            physics: physicsKeys.join(","),
-            chemistry: chemistryKeys.join(","),
-            biology: biologyKeys.join(",")
-          })
-        });
-      } catch (err) {
-        console.error("Syllabus save error", err);
-      }
-    }
+  document.querySelectorAll(".subject-card").forEach(card => {
+    card.addEventListener("click", () => {
+      currentSubjectKey = card.dataset.subject;
+      currentChapterId = null;
+      document.getElementById("topicsPanel").style.display = "none";
+      renderChapters();
+    });
+  });
 
-    // ==== 9. Leaderboard & Level info ====
-    const monthShort = today.toLocaleString("en-IN", { month: "short" });
-    const day = today.getDate();
-    const cycleStart = day <= 15 ? 1 : 16;
-    const cycleEnd = day <= 15 ? 15 : new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    const cycleText = `${cycleStart}–${cycleEnd} ${monthShort} ${today.getFullYear()}`;
-    document.getElementById("leaderboardPeriod").textContent = cycleText;
-    document.getElementById("levelCycleLabel").textContent = cycleText;
+  // ==== DAILY TARGETS (no separate Calculate button) ====
+  const topicsInput = document.getElementById("targetsTopics");
+  const hoursInput = document.getElementById("targetsHours");
+  const qInput = document.getElementById("targetsQuestions");
+  const correctInput = document.getElementById("targetsCorrect");
+  const incorrectInput = document.getElementById("targetsIncorrect");
 
-    const levelNames = {
-      1: "Level 1 – Starter Spark",
-      2: "Level 2 – Concept Crusader",
-      3: "Level 3 – Practice Pro",
-      4: "Level 4 – Focused Fighter",
-      5: "Level 5 – Revision Ranger",
-      6: "Level 6 – Accuracy Ace",
-      7: "Level 7 – Consistent Challenger",
-      8: "Level 8 – Subject Specialist",
-      9: "Level 9 – Streak Warrior",
-      10: "Level 10 – Rank Hunter",
-      11: "Level 11 – NeuroNEET Master",
-      12: "Level 12 – NEET Top 1% Mode",
-      13: "Level 13 – All India Contender",
-      14: "Level 14 – Future Doctor",
-      15: "Level 15 – Legend of NeuroNEET"
+  const pointsTopicsLabel = document.getElementById("pointsTopics");
+  const pointsHoursLabel = document.getElementById("pointsHours");
+  const accuracyPercentLabel = document.getElementById("accuracyPercent");
+  const pointsQuestionsLabel = document.getElementById("pointsQuestions");
+  const pointsTotalTodayLabel = document.getElementById("pointsTotalToday");
+  const streakDaysLabel = document.getElementById("streakDaysLabel");
+
+  let streakDays = currentUser.streakDays || 0;
+
+  function calculatePoints() {
+    const topicsText = topicsInput.value.trim();
+    const topicsCount = topicsText
+      ? topicsText.split(/[,;\n]/).map(t => t.trim()).filter(t => t.length > 0).length
+      : 0;
+    const hours = parseFloat(hoursInput.value) || 0;
+    const qTotal = parseInt(qInput.value) || 0;
+    const qCorrect = parseInt(correctInput.value) || 0;
+    const qIncorrect = Math.max(qTotal - qCorrect, 0);
+    incorrectInput.value = qIncorrect;
+
+    const topicsPoints = topicsCount;
+    const hoursPoints = hours;
+    let accuracy = 0;
+    if (qTotal > 0) accuracy = (qCorrect / qTotal) * 100;
+    let questionsPoints = 0;
+    if (accuracy >= 90) questionsPoints = 3;
+    else if (accuracy >= 80) questionsPoints = 2;
+    else if (accuracy >= 70) questionsPoints = 1;
+    else if (accuracy >= 60) questionsPoints = 0;
+    else if (accuracy >= 50) questionsPoints = -1;
+    else if (accuracy >= 40) questionsPoints = -2;
+    else if (accuracy > 0) questionsPoints = -3;
+
+    const totalPoints = topicsPoints + hoursPoints + questionsPoints;
+
+    // ye labels sirf info ke liye dikh rahe hain; button remove ho chuka hai
+    pointsTopicsLabel.textContent = topicsPoints.toFixed(1);
+    pointsHoursLabel.textContent = hoursPoints.toFixed(1);
+    accuracyPercentLabel.textContent = accuracy.toFixed(1) + "%";
+    pointsQuestionsLabel.textContent = questionsPoints.toString();
+    pointsTotalTodayLabel.textContent = totalPoints.toFixed(1);
+
+    return {
+      totalPoints,
+      topicsPoints,
+      hoursPoints,
+      questionsPoints,
+      accuracy,
+      topicsCount,
+      hours,
+      qTotal,
+      qCorrect
     };
-    document.getElementById("levelName").textContent =
-      levelNames[currentUser.level] || levelNames[1];
+  }
 
-    async function loadLeaderboard(limit = 20) {
-      try {
-        const res = await fetch(`${BASE_URL}?path=leaderboard`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ limit })
-        });
-        const data = await res.json();
-        if (!data.ok) return;
-        const list = data.leaderboard || [];
-        const tbody = document.querySelector("#leaderboardTable tbody");
-        tbody.innerHTML = "";
-        list.slice(0, 5).forEach((r) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${r.rank}</td>
-            <td>${r.name}</td>
-            <td><span class="badge-small">L${r.level}</span></td>
-            <td>${r.points}</td>
-            <td>${r.streak}🔥</td>
-          `;
-          tbody.appendChild(tr);
-        });
-        const my = list.find((r) => r.userId === currentUser.userId);
-        if (my) {
-          currentUser.rank = my.rank;
-          document.getElementById("userRank").textContent = my.rank;
-          localStorage.setItem("neuroUser", JSON.stringify(currentUser));
-        }
-      } catch (err) {
-        console.error("Leaderboard load error", err);
+  document.getElementById("btnSaveDay").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const result = calculatePoints();
+    const payload = {
+      userId: currentUser.userId,
+      date: new Date().toISOString().slice(0, 10),
+      topicsText: topicsInput.value.trim(),
+      topicsCount: result.topicsCount,
+      hours: result.hours,
+      qTotal: result.qTotal,
+      qCorrect: result.qCorrect,
+      accuracy: result.accuracy,
+      points: result.totalPoints
+    };
+
+    try {
+      const res = await fetch(`${BASE_URL}?path=dailyTargets`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        alert("Save error: " + data.error);
+        return;
       }
-    }
-
-    document.getElementById("viewMoreLeaderboard").addEventListener("click", () => {
-      alert("Later: show full top 20 leaderboard in a modal/page.");
-    });
-
-    // ==== INITIALIZE ====
-    (async () => {
-      await loadSyllabusProgress();
-      await loadLeaderboard(20);
+      streakDays = data.newStreak;
       streakDaysLabel.textContent = `${streakDays} days`;
-    })();
-  </script>
+      currentUser.pointsTotal = data.newPointsTotal;
+      currentUser.streakDays = data.newStreak;
+      document.getElementById("userPoints").textContent = data.newPointsTotal;
+      document.getElementById("userStreak").textContent = data.newStreak;
+      localStorage.setItem("neuroUser", JSON.stringify(currentUser));
+      alert("Daily targets saved!");
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Thodi der baad try karein.");
+    }
+  });
+
+  // ==== SYLLABUS SAVE/LOAD with backend ====
+  async function loadSyllabusProgress() {
+    try {
+      const res = await fetch(`${BASE_URL}?path=syllabusLoad`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser.userId })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        renderChapters();
+        return;
+      }
+      userProgress.physics = new Set(
+        data.physics ? data.physics.split(",").filter(Boolean) : []
+      );
+      userProgress.chemistry = new Set(
+        data.chemistry ? data.chemistry.split(",").filter(Boolean) : []
+      );
+      userProgress.biology = new Set(
+        data.biology ? data.biology.split(",").filter(Boolean) : []
+      );
+      renderChapters();
+    } catch (err) {
+      console.error("Syllabus load error", err);
+      renderChapters();
+    }
+  }
+
+  async function saveSyllabusProgress() {
+    try {
+      const physicsKeys = Array.from(userProgress.physics);
+      const chemistryKeys = Array.from(userProgress.chemistry);
+      const biologyKeys = Array.from(userProgress.biology);
+      await fetch(`${BASE_URL}?path=syllabusSave`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.userId,
+          physics: physicsKeys.join(","),
+          chemistry: chemistryKeys.join(","),
+          biology: biologyKeys.join(",")
+        })
+      });
+    } catch (err) {
+      console.error("Syllabus save error", err);
+    }
+  }
+
+  // ==== 9. Leaderboard & Level info ====
+  const monthShort = today.toLocaleString("en-IN", { month: "short" });
+  const day = today.getDate();
+  const cycleStart = day <= 15 ? 1 : 16;
+  const cycleEnd = day <= 15 ? 15 : new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const cycleText = `${cycleStart}–${cycleEnd} ${monthShort} ${today.getFullYear()}`;
+  document.getElementById("leaderboardPeriod").textContent = cycleText;
+  document.getElementById("levelCycleLabel").textContent = cycleText;
+
+  const levelNames = {
+    1: "Level 1 – Starter Spark",
+    2: "Level 2 – Concept Crusader",
+    3: "Level 3 – Practice Pro",
+    4: "Level 4 – Focused Fighter",
+    5: "Level 5 – Revision Ranger",
+    6: "Level 6 – Accuracy Ace",
+    7: "Level 7 – Consistent Challenger",
+    8: "Level 8 – Subject Specialist",
+    9: "Level 9 – Streak Warrior",
+    10: "Level 10 – Rank Hunter",
+    11: "Level 11 – NeuroNEET Master",
+    12: "Level 12 – NEET Top 1% Mode",
+    13: "Level 13 – All India Contender",
+    14: "Level 14 – Future Doctor",
+    15: "Level 15 – Legend of NeuroNEET"
+  };
+  document.getElementById("levelName").textContent =
+    levelNames[currentUser.level] || levelNames[1];
+
+  async function loadLeaderboard(limit = 20) {
+    try {
+      const res = await fetch(`${BASE_URL}?path=leaderboard`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ limit })
+      });
+      const data = await res.json();
+      if (!data.ok) return;
+      const list = data.leaderboard || [];
+      const tbody = document.querySelector("#leaderboardTable tbody");
+      tbody.innerHTML = "";
+      list.slice(0, 5).forEach((r) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.rank}</td>
+          <td>${r.name}</td>
+          <td><span class="badge-small">L${r.level}</span></td>
+          <td>${r.points}</td>
+          <td>${r.streak}🔥</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      const my = list.find((r) => r.userId === currentUser.userId);
+      if (my) {
+        currentUser.rank = my.rank;
+        document.getElementById("userRank").textContent = my.rank;
+        localStorage.setItem("neuroUser", JSON.stringify(currentUser));
+      }
+    } catch (err) {
+      console.error("Leaderboard load error", err);
+    }
+  }
+
+  document.getElementById("viewMoreLeaderboard").addEventListener("click", () => {
+    alert("Later: show full top 20 leaderboard in a modal/page.");
+  });
+
+  // ==== INITIALIZE ====
+  (async () => {
+    await loadSyllabusProgress();
+    await loadLeaderboard(20);
+    streakDaysLabel.textContent = `${streakDays} days`;
+  })();
+</script>
 </body>
 </html>
