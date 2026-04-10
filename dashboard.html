@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuroNEET Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --card-soft: rgba(15, 23, 42, 0.96);
+      --border: rgba(148, 163, 184, 0.45);
+      --accent: #f97316;
+      --accent2: #22c55e;
+      --accent3: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.3), transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(249, 115, 22, 0.25), transparent 50%),
+        #020617;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 12px 32px;
+    }
+
+    /* HEADER / TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: conic-gradient(#22c55e, #38bdf8, #a855f7, #f97316, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 1.2rem;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.7);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-family: "Poppins", sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      font-size: 1.1rem;
+    }
+
+    .brand-sub {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .top-middle {
+      flex: 1;
+      max-width: 520px;
+    }
+
+    .quote-card {
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.8));
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+    }
+
+    .quote-pill {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #22c55e, #15803d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .quote-text {
+      flex: 1;
+      color: #e5e7eb;
+    }
+
+    .quote-meta {
+      font-size: 0.7rem;
+      color: #a5b4fc;
+      text-align: right;
+    }
+
+    .top-right {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .top-right strong {
+      color: #e5e7eb;
+      display: block;
+    }
+
+    /* LAYOUT */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1.2fr;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* GENERIC CARD */
+    .card {
+      background: var(--card-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 12px 12px 14px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.95);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .card-subtitle {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    /* SYLLABUS TRACKER */
+    .syllabus-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .syllabus-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .subject-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .subject-card {
+      border-radius: 14px;
+      padding: 10px 10px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.8), #020617);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 1);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .subject-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #020617;
+      flex-shrink: 0;
+    }
+
+    .subject-info {
+      flex: 1;
+    }
+
+    .subject-name {
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .subject-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .subject-progress {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 6px solid rgba(30, 64, 175, 0.9);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .subject-progress-inner {
+      position: absolute;
+      inset: 4px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, rgba(15, 23, 42, 0.4), #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #e5e7eb;
+    }
+
+    /* CHAPTER / TOPICS PANEL */
+    .syllabus-detail {
+      border-radius: 14px;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.25), #020617);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 10px 10px 8px;
+      font-size: 0.8rem;
+    }
+
+    .syllabus-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .syllabus-detail-subject {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .syllabus-detail-meta {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+
+    .chapter-list {
+      max-height: 190px;
+      overflow-y: auto;
+      margin-top: 4px;
+      padding-right: 4px;
+    }
+
+    .chapter-item {
+      border-radius: 10px;
+      padding: 6px 7px;
+      margin-bottom: 4px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.13s ease, border-color 0.13s ease;
+    }
+
+    .chapter-item:hover {
+      background: rgba(15, 23, 42, 0.98);
+      border-color: #38bdf8;
+    }
+
+    .chapter-title {
+      font-size: 0.78rem;
+    }
+
+    .chapter-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .topics-panel {
+      margin-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+      padding-top: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .topics-column {
+      font-size: 0.76rem;
+    }
+
+    .topics-column-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+    }
+
+    .topics-list {
+      max-height: 150px;
+      overflow-y: auto;
+      padding-right: 3px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .topic-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.4);
+      font-size: 0.75rem;
+    }
+
+    .topic-item:last-child {
+      border-bottom: none;
+    }
+
+    .topic-item input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: #22c55e;
+    }
+
+    /* DAILY TARGETS */
+    .targets-card .card-body {
+      margin-top: 2px;
+    }
+
+    .targets-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .targets-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .field label {
+      font-size: 0.74rem;
+      color: #cbd5e1;
+    }
+
+    .field input,
+    .field textarea {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      color: var(--text);
+      outline: none;
+      resize: vertical;
+      min-height: 32px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .targets-buttons {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: none;
+      font-size: 0.76rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #22c55e, #38bdf8);
+      color: #020617;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.85);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 1);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .points-summary {
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.35), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      padding: 8px 9px;
+      font-size: 0.78rem;
+    }
+
+    .points-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .points-total {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .streak-pill {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.7);
+    }
+
+    .streak-pill span {
+      color: #86efac;
+    }
+
+    /* LEADERBOARD & LEVELS */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .level-card {
+      background: var(--card-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 10px 12px 12px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.95);
+    }
+
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .level-badge {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: radial-gradient(circle at 0 0, rgba(249, 115, 22, 0.4), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(250, 204, 21, 0.8);
+      color: #fef9c3;
+    }
+
+    .level-name {
+      font-weight: 600;
+    }
+
+    .level-meta {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .leaderboard-card {
+      background: var(--card-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 10px 10px 12px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.95);
+    }
+
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .leaderboard-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .leaderboard-period {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.74rem;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: 4px 4px;
+      text-align: left;
+    }
+
+    .leaderboard-table th {
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.8);
+    }
+
+    .leaderboard-table tr:nth-child(odd) td {
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .leaderboard-table tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.92);
+    }
+
+    .leaderboard-table tr td:first-child {
+      width: 28px;
+    }
+
+    .badge-small {
+      border-radius: 999px;
+      padding: 1px 6px;
+      font-size: 0.7rem;
+      background: rgba(30, 64, 175, 0.9);
+      color: #e5e7eb;
+    }
+
+    .view-more-row {
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .link-btn {
+      font-size: 0.76rem;
+      color: #93c5fd;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="top-left">
+        <div class="logo-circle">N</div>
+        <div class="brand-text">
+          <div class="brand-name">NEURONEET</div>
+          <div class="brand-sub">NEET DASHBOARD • SYLLABUS • TARGETS • LEADERBOARD</div>
+        </div>
+      </div>
+
+      <div class="top-middle">
+        <div class="quote-card">
+          <div class="quote-pill">🔥</div>
+          <div class="quote-text" id="dailyQuote">
+            Loading today's NEET motivation...
+          </div>
+          <div class="quote-meta" id="dateInfo">
+            <!-- Date + day -->
+          </div>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <strong id="userName">Student Name</strong>
+        Level <span id="userLevel">1</span> • Rank <span id="userRank">--</span><br />
+        Total Points: <span id="userPoints">0</span> • Streak: <span id="userStreak">0</span> days
+      </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <main class="main-grid">
+      <!-- LEFT COLUMN: Syllabus + Targets -->
+      <div class="left-column">
+        <!-- SYLLABUS TRACKER -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Syllabus Tracker</div>
+              <div class="card-subtitle">Subject-wise NEET syllabus completion</div>
+            </div>
+            <div class="card-subtitle">
+              Overall: <span id="overallCompletion">0%</span>
+            </div>
+          </div>
+
+          <div class="syllabus-grid">
+            <!-- Subject cards -->
+            <div class="subject-cards">
+              <!-- Physics -->
+              <div class="subject-card" data-subject="physics">
+                <div class="subject-dot" style="background: radial-gradient(circle at 30% 0,#38bdf8,#1d4ed8);">
+                  P
+                </div>
+                <div class="subject-info">
+                  <div class="subject-name">Physics</div>
+                  <div class="subject-meta">
+                    Units 1–20 • NEET (UG) 2026 syllabus
+                  </div>
+                </div>
+                <div class="subject-progress">
+                  <div class="subject-progress-inner" id="physicsProgress">0%</div>
+                </div>
+              </div>
+              <!-- Chemistry -->
+              <div class="subject-card" data-subject="chemistry">
+                <div class="subject-dot" style="background: radial-gradient(circle at 30% 0,#22c55e,#15803d);">
+                  C
+                </div>
+                <div class="subject-info">
+                  <div class="subject-name">Chemistry</div>
+                  <div class="subject-meta">
+                    Physical, Inorganic & Organic • Units 1–20
+                  </div>
+                </div>
+                <div class="subject-progress">
+                  <div class="subject-progress-inner" id="chemistryProgress">0%</div>
+                </div>
+              </div>
+              <!-- Biology -->
+              <div class="subject-card" data-subject="biology">
+                <div class="subject-dot" style="background: radial-gradient(circle at 30% 0,#a855f7,#6d28d9);">
+                  B
+                </div>
+                <div class="subject-info">
+                  <div class="subject-name">Biology</div>
+                  <div class="subject-meta">
+                    Botany & Zoology • Units 1–10
+                  </div>
+                </div>
+                <div class="subject-progress">
+                  <div class="subject-progress-inner" id="biologyProgress">0%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detail: chapters & topics -->
+            <div class="syllabus-detail">
+              <div class="syllabus-detail-header">
+                <div class="syllabus-detail-subject">
+                  <span id="selectedSubjectLabel">Physics</span> – Chapters & topics
+                </div>
+                <div class="syllabus-detail-meta">
+                  Completed: <span id="subjectCompletionPercent">0%</span>
+                </div>
+              </div>
+              <!-- Chapter list -->
+              <div class="chapter-list" id="chapterList">
+                <!-- Dynamically filled by JS from syllabus data -->
+                <!-- Example static item: -->
+                <!--
+                <div class="chapter-item" data-chapter-id="phy_u1">
+                  <div>
+                    <div class="chapter-title">Unit 1: Physics and Measurement</div>
+                    <div class="chapter-meta">3/8 topics completed</div>
+                  </div>
+                  <div class="badge-small">Unit 1</div>
+                </div>
+                -->
+              </div>
+              <!-- Topic drill-down -->
+              <div class="topics-panel" id="topicsPanel" style="display:none;">
+                <div class="topics-column">
+                  <div class="topics-column-title">
+                    Remaining topics
+                    <span id="remainingCount">(0)</span>
+                  </div>
+                  <div class="topics-list" id="remainingTopics">
+                    <!-- Checkboxes -->
+                  </div>
+                </div>
+                <div class="topics-column">
+                  <div class="topics-column-title">
+                    Completed topics
+                    <span id="completedCount">(0)</span>
+                  </div>
+                  <div class="topics-list" id="completedTopics">
+                    <!-- Completed list -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DAILY TARGETS -->
+        <section class="card targets-card" style="margin-top:12px;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Daily Targets</div>
+              <div class="card-subtitle">Log today's study & get points</div>
+            </div>
+            <div class="card-subtitle">
+              Date: <span id="targetsDate">--</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="targets-grid">
+              <!-- Left: Form -->
+              <div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Topics you studied today</label>
+                    <textarea id="targetsTopics" placeholder="Example: Kinematics – projectile motion; Biomolecules – proteins"></textarea>
+                    <div class="helper-text">
+                      Each distinct topic will be counted as <strong>1 point</strong>.
+                    </div>
+                  </div>
+
+                  <div class="field-row">
+                    <div class="field">
+                      <label>Total study hours</label>
+                      <input type="number" id="targetsHours" min="0" step="0.5" placeholder="e.g. 5" />
+                      <div class="helper-text">1 hour = 1 point</div>
+                    </div>
+                    <div class="field">
+                      <label>Practice questions attempted</label>
+                      <input type="number" id="targetsQuestions" min="0" step="1" placeholder="e.g. 120" />
+                    </div>
+                  </div>
+
+                  <div class="field-row">
+                    <div class="field">
+                      <label>Questions correct</label>
+                      <input type="number" id="targetsCorrect" min="0" step="1" placeholder="e.g. 96" />
+                      <div class="helper-text">We will calculate accuracy & bonus points.</div>
+                    </div>
+                    <div class="field">
+                      <label>Questions incorrect (auto)</label>
+                      <input type="number" id="targetsIncorrect" readonly />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="targets-buttons">
+                  <button class="btn-sm btn-ghost" id="btnCalculatePoints">
+                    Calculate Points
+                  </button>
+                  <button class="btn-sm btn-primary" id="btnSaveDay">
+                    Save Day & Update Streak
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Points & streak -->
+              <div class="points-summary">
+                <div class="points-row">
+                  <div>Topics Points</div>
+                  <div id="pointsTopics">0</div>
+                </div>
+                <div class="points-row">
+                  <div>Hours Points</div>
+                  <div id="pointsHours">0</div>
+                </div>
+                <div class="points-row">
+                  <div>Questions Accuracy</div>
+                  <div><span id="accuracyPercent">0%</span> → <span id="pointsQuestions">0</span> pts</div>
+                </div>
+                <div class="points-row" style="border-top:1px solid rgba(148,163,184,0.7); padding-top:4px; margin-top:4px;">
+                  <div>Today's Total</div>
+                  <div class="points-total" id="pointsTotalToday">0</div>
+                </div>
+                <div class="streak-pill">
+                  🔥 Streak:
+                  <span id="streakDaysLabel">0 days</span>
+                </div>
+                <div class="helper-text" style="margin-top:4px;">
+                  Accuracy points:<br/>
+                  ≥90% = +3, 80–89% = +2, 70–79% = +1, 60–69% = 0,<br/>
+                  50–59% = −1, 40–49% = −2, &lt;40% = −3.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: Level & Leaderboard -->
+      <div class="right-column">
+        <!-- LEVEL CARD -->
+        <section class="level-card">
+          <div class="level-header">
+            <div>
+              <div class="card-title">Your Level</div>
+              <div class="card-subtitle">15‑day performance based levels</div>
+            </div>
+            <div class="card-subtitle">
+              Cycle: <span id="levelCycleLabel">--</span>
+            </div>
+          </div>
+          <div>
+            <div class="level-badge">
+              <span>🔥</span>
+              <span class="level-name" id="levelName">Level 1 – Starter Spark</span>
+            </div>
+            <div class="level-meta" style="margin-top:6px;">
+              Next level‑up after this 15‑day cycle. Top 5 among your peers go to the next level,
+              based on points, rank & streak.
+            </div>
+          </div>
+        </section>
+
+        <!-- LEADERBOARD CARD -->
+        <section class="leaderboard-card">
+          <div class="leaderboard-header">
+            <div>
+              <div class="leaderboard-title">Leaderboard – Top 5</div>
+              <div class="leaderboard-period" id="leaderboardPeriod">
+                <!-- e.g. 01–15 April 2026 -->
+              </div>
+            </div>
+          </div>
+
+          <div class="leaderboard-body">
+            <table class="leaderboard-table" id="leaderboardTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Level</th>
+                  <th>Points</th>
+                  <th>Streak</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Example static rows, replace with JS-filled rows from DB -->
+                <tr>
+                  <td>1</td>
+                  <td>Demo Topper</td>
+                  <td><span class="badge-small">L5</span></td>
+                  <td>420</td>
+                  <td>15🔥</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Demo Aspirant</td>
+                  <td><span class="badge-small">L4</span></td>
+                  <td>398</td>
+                  <td>12🔥</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Demo Player</td>
+                  <td><span class="badge-small">L4</span></td>
+                  <td>372</td>
+                  <td>10🔥</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Demo Achiever</td>
+                  <td><span class="badge-small">L3</span></td>
+                  <td>350</td>
+                  <td>9🔥</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Demo Fighter</td>
+                  <td><span class="badge-small">L3</span></td>
+                  <td>330</td>
+                  <td>8🔥</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="view-more-row">
+              <button class="link-btn" id="viewMoreLeaderboard">
+                View top 20 students
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      NeuroNEET Dashboard • Version 1.0 • NEET (UG) 2026 syllabus based tracker.[file:1]
+    </footer>
+  </div>
+
+  <!-- BASIC DASHBOARD JS (frontend only, no real backend yet) -->
+  <script>
+    // 1. DATE, DAY, QUOTE
+    const today = new Date();
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('dateInfo').textContent = today.toLocaleDateString('en-IN', dateOptions);
+    document.getElementById('targetsDate').textContent = today.toLocaleDateString('en-IN');
+
+    const quotes = [
+      "Dream NEET, work NEET, live NEET – the rank will follow.",
+      "Every MCQ solved is a step closer to your MBBS seat.",
+      "You win NEET not in one day, but in what you repeat every day.",
+      "Focus, practice, revise – the holy trinity of NEET success.",
+      "Turn your weaknesses into your strongest chapters.",
+      "Let your effort make your NEET rank inevitable."
+    ];
+    const quoteIndex = today.getDate() % quotes.length;
+    document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
+
+    // 2. Dummy user info (replace with real data after login)
+    const dummyUser = {
+      name: "NeuroNEET Aspirant",
+      level: 1,
+      rank: "--",
+      pointsTotal: 0,
+      streakDays: 0
+    };
+    document.getElementById('userName').textContent = dummyUser.name;
+    document.getElementById('userLevel').textContent = dummyUser.level;
+    document.getElementById('userRank').textContent = dummyUser.rank;
+    document.getElementById('userPoints').textContent = dummyUser.pointsTotal;
+    document.getElementById('userStreak').textContent = dummyUser.streakDays;
+
+    // 3. Placeholder syllabus data – you will instead load from a separate JS/DB
+    // Example structure (shortened demo – extend using NEET syllabus PDF).[file:1]
+    const syllabusData = {
+      physics: {
+        name: "Physics",
+        chapters: [
+          {
+            id: "phy_u1",
+            unit: 1,
+            title: "Physics and Measurement",
+            topics: [
+              "Units of measurement & SI system",
+              "Fundamental & derived units",
+              "Least count & errors in measurement",
+              "Significant figures",
+              "Dimensions of physical quantities",
+              "Dimensional analysis & its applications"
+            ]
+          },
+          {
+            id: "phy_u2",
+            unit: 2,
+            title: "Kinematics",
+            topics: [
+              "Frame of reference",
+              "Motion in a straight line",
+              "Position-time graph",
+              "Speed & velocity",
+              "Uniform & non-uniform motion",
+              "Uniformly accelerated motion",
+              "Scalars & vectors",
+              "Projectile motion",
+              "Uniform circular motion"
+            ]
+          }
+          // Add remaining units 3–20 from NMC syllabus
+        ]
+      },
+      chemistry: {
+        name: "Chemistry",
+        chapters: [
+          {
+            id: "chem_u1",
+            unit: 1,
+            title: "Some Basic Concepts of Chemistry",
+            topics: [
+              "Matter & its nature",
+              "Dalton's atomic theory",
+              "Laws of chemical combination",
+              "Mole concept & molar mass",
+              "Percentage composition",
+              "Empirical & molecular formula",
+              "Stoichiometry"
+            ]
+          },
+          {
+            id: "chem_u2",
+            unit: 2,
+            title: "Atomic Structure",
+            topics: [
+              "Electromagnetic radiation",
+              "Photoelectric effect",
+              "Hydrogen spectrum",
+              "Bohr model & limitations",
+              "Dual nature of matter",
+              "Heisenberg uncertainty principle",
+              "Quantum numbers & orbitals"
+            ]
+          }
+          // Add units 3–20
+        ]
+      },
+      biology: {
+        name: "Biology",
+        chapters: [
+          {
+            id: "bio_u1",
+            unit: 1,
+            title: "Diversity in Living World",
+            topics: [
+              "What is living? & biodiversity",
+              "Need for classification",
+              "Five kingdom classification",
+              "Monera, Protista, Fungi – features",
+              "Plant groups – Algae, Bryophytes, Pteridophytes, Gymnosperms",
+              "Animal phyla & chordate classes"
+            ]
+          },
+          {
+            id: "bio_u2",
+            unit: 2,
+            title: "Structural Organisation in Animals and Plants",
+            topics: [
+              "Morphology & anatomy of flowering plants",
+              "Root, stem, leaf & inflorescence",
+              "Family examples (Malvaceae, Cruciferae, Leguminosae, etc.)",
+              "Animal tissues",
+              "Frog systems – digestive, circulatory, respiratory, nervous, reproductive"
+            ]
+          }
+          // Add units 3–10
+        ]
+      }
+    };
+
+    // Simulated user progress: map subject -> Set of completed topic keys
+    // Key format: `${chapterId}_${topicIndex}`
+    const userProgress = {
+      physics: new Set(),
+      chemistry: new Set(),
+      biology: new Set()
+    };
+
+    let currentSubjectKey = "physics";
+    let currentChapterId = null;
+
+    // 4. Render chapter list for selected subject
+    function renderChapters() {
+      const subject = syllabusData[currentSubjectKey];
+      const list = document.getElementById("chapterList");
+      list.innerHTML = "";
+      subject.chapters.forEach(ch => {
+        const totalTopics = ch.topics.length;
+        let completedCount = 0;
+        ch.topics.forEach((_, idx) => {
+          const key = `${ch.id}_${idx}`;
+          if (userProgress[currentSubjectKey].has(key)) completedCount++;
+        });
+        const div = document.createElement("div");
+        div.className = "chapter-item";
+        div.dataset.chapterId = ch.id;
+        div.innerHTML = `
+          <div>
+            <div class="chapter-title">${ch.title}</div>
+            <div class="chapter-meta">${completedCount}/${totalTopics} topics completed</div>
+          </div>
+          <div class="badge-small">Unit ${ch.unit}</div>
+        `;
+        div.addEventListener("click", () => {
+          currentChapterId = ch.id;
+          renderTopics(ch);
+        });
+        list.appendChild(div);
+      });
+      updateSubjectCompletion();
+      document.getElementById("selectedSubjectLabel").textContent = subject.name;
+    }
+
+    // 5. Render topics panel for selected chapter
+    function renderTopics(chapter) {
+      const panel = document.getElementById("topicsPanel");
+      panel.style.display = "grid";
+      const remaining = document.getElementById("remainingTopics");
+      const completed = document.getElementById("completedTopics");
+      remaining.innerHTML = "";
+      completed.innerHTML = "";
+
+      let remainingCount = 0;
+      let completedCount = 0;
+
+      chapter.topics.forEach((topicText, idx) => {
+        const key = `${chapter.id}_${idx}`;
+        const isDone = userProgress[currentSubjectKey].has(key);
+
+        const item = document.createElement("div");
+        item.className = "topic-item";
+        const ck = document.createElement("input");
+        ck.type = "checkbox";
+        ck.checked = isDone;
+        ck.addEventListener("change", () => {
+          if (ck.checked) {
+            userProgress[currentSubjectKey].add(key);
+          } else {
+            userProgress[currentSubjectKey].delete(key);
+          }
+          // Re-render topics & chapters progress
+          renderChapters();
+          renderTopics(chapter);
+        });
+        const label = document.createElement("div");
+        label.textContent = topicText;
+
+        item.appendChild(ck);
+        item.appendChild(label);
+
+        if (isDone) {
+          completed.appendChild(item);
+          completedCount++;
+        } else {
+          remaining.appendChild(item);
+          remainingCount++;
+        }
+      });
+
+      document.getElementById("remainingCount").textContent = `(${remainingCount})`;
+      document.getElementById("completedCount").textContent = `(${completedCount})`;
+    }
+
+    // 6. Update progress circles and percentages
+    function updateSubjectCompletion() {
+      ["physics", "chemistry", "biology"].forEach(subKey => {
+        const subject = syllabusData[subKey];
+        let totalTopics = 0;
+        let completedTopics = 0;
+        subject.chapters.forEach(ch => {
+          totalTopics += ch.topics.length;
+          ch.topics.forEach((_, idx) => {
+            const key = `${ch.id}_${idx}`;
+            if (userProgress[subKey].has(key)) completedTopics++;
+          });
+        });
+        const percent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+        const labelId = subKey + "Progress";
+        const el = document.getElementById(labelId);
+        if (el) el.textContent = percent + "%";
+        if (subKey === currentSubjectKey) {
+          document.getElementById("subjectCompletionPercent").textContent = percent + "%";
+        }
+      });
+
+      // Overall completion (simple average of subjects)
+      const phy = parseInt(document.getElementById("physicsProgress").textContent) || 0;
+      const chem = parseInt(document.getElementById("chemistryProgress").textContent) || 0;
+      const bio = parseInt(document.getElementById("biologyProgress").textContent) || 0;
+      const overall = Math.round((phy + chem + bio) / 3);
+      document.getElementById("overallCompletion").textContent = overall + "%";
+    }
+
+    // 7. Subject click handlers
+    document.querySelectorAll(".subject-card").forEach(card => {
+      card.addEventListener("click", () => {
+        currentSubjectKey = card.dataset.subject;
+        currentChapterId = null;
+        document.getElementById("topicsPanel").style.display = "none";
+        renderChapters();
+      });
+    });
+
+    // Initialize physics as default
+    renderChapters();
+
+    // 8. Daily targets – points calculation
+    const topicsInput = document.getElementById("targetsTopics");
+    const hoursInput = document.getElementById("targetsHours");
+    const qInput = document.getElementById("targetsQuestions");
+    const correctInput = document.getElementById("targetsCorrect");
+    const incorrectInput = document.getElementById("targetsIncorrect");
+
+    const pointsTopicsLabel = document.getElementById("pointsTopics");
+    const pointsHoursLabel = document.getElementById("pointsHours");
+    const accuracyPercentLabel = document.getElementById("accuracyPercent");
+    const pointsQuestionsLabel = document.getElementById("pointsQuestions");
+    const pointsTotalTodayLabel = document.getElementById("pointsTotalToday");
+    const streakDaysLabel = document.getElementById("streakDaysLabel");
+
+    let streakDays = dummyUser.streakDays;
+
+    function calculatePoints() {
+      const topicsText = topicsInput.value.trim();
+      const topicsCount = topicsText
+        ? topicsText.split(/[,;\n]/).map(t => t.trim()).filter(t => t.length > 0).length
+        : 0;
+      const hours = parseFloat(hoursInput.value) || 0;
+      const qTotal = parseInt(qInput.value) || 0;
+      const qCorrect = parseInt(correctInput.value) || 0;
+      const qIncorrect = Math.max(qTotal - qCorrect, 0);
+      incorrectInput.value = qIncorrect;
+
+      const topicsPoints = topicsCount;
+      const hoursPoints = hours;
+      let accuracy = 0;
+      if (qTotal > 0) {
+        accuracy = (qCorrect / qTotal) * 100;
+      }
+      let questionsPoints = 0;
+      if (accuracy >= 90) questionsPoints = 3;
+      else if (accuracy >= 80) questionsPoints = 2;
+      else if (accuracy >= 70) questionsPoints = 1;
+      else if (accuracy >= 60) questionsPoints = 0;
+      else if (accuracy >= 50) questionsPoints = -1;
+      else if (accuracy >= 40) questionsPoints = -2;
+      else if (accuracy > 0) questionsPoints = -3;
+
+      const totalPoints = topicsPoints + hoursPoints + questionsPoints;
+
+      pointsTopicsLabel.textContent = topicsPoints.toFixed(1);
+      pointsHoursLabel.textContent = hoursPoints.toFixed(1);
+      accuracyPercentLabel.textContent = accuracy.toFixed(1) + "%";
+      pointsQuestionsLabel.textContent = questionsPoints.toString();
+      pointsTotalTodayLabel.textContent = totalPoints.toFixed(1);
+
+      return totalPoints;
+    }
+
+    document.getElementById("btnCalculatePoints").addEventListener("click", (e) => {
+      e.preventDefault();
+      calculatePoints();
+    });
+
+    document.getElementById("btnSaveDay").addEventListener("click", (e) => {
+      e.preventDefault();
+      const totalPoints = calculatePoints();
+      // Simple local streak update (replace with DB logic)
+      if (totalPoints > 0) {
+        streakDays += 1;
+      } else {
+        streakDays = 0;
+      }
+      streakDaysLabel.textContent = `${streakDays} days`;
+      alert("Daily targets saved (frontend demo). Connect this to your database to store permanently.");
+    });
+
+    // 9. Leaderboard & levels – dummy cycle label
+    const monthShort = today.toLocaleString("en-IN", { month: "short" });
+    const day = today.getDate();
+    const cycleStart = day <= 15 ? 1 : 16;
+    const cycleEnd = day <= 15 ? 15 : new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const cycleText = `${cycleStart}–${cycleEnd} ${monthShort} ${today.getFullYear()}`;
+    document.getElementById("leaderboardPeriod").textContent = cycleText;
+    document.getElementById("levelCycleLabel").textContent = cycleText;
+
+    // Level name suggestion – you can map 1–15 to specific names
+    const levelNames = {
+      1: "Level 1 – Starter Spark",
+      2: "Level 2 – Concept Crusader",
+      3: "Level 3 – Practice Pro",
+      4: "Level 4 – Focused Fighter",
+      5: "Level 5 – Revision Ranger",
+      6: "Level 6 – Accuracy Ace",
+      7: "Level 7 – Consistent Challenger",
+      8: "Level 8 – Subject Specialist",
+      9: "Level 9 – Streak Warrior",
+      10: "Level 10 – Rank Hunter",
+      11: "Level 11 – NeuroNEET Master",
+      12: "Level 12 – NEET Top 1% Mode",
+      13: "Level 13 – All India Contender",
+      14: "Level 14 – Future Doctor",
+      15: "Level 15 – Legend of NeuroNEET"
+    };
+    document.getElementById("levelName").textContent = levelNames[dummyUser.level] || levelNames[1];
+
+    document.getElementById("viewMoreLeaderboard").addEventListener("click", () => {
+      alert("In full version, this will open a page/modal showing top 20 students with ranks and details.");
+    });
+  </script>
+</body>
+</html>
