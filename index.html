@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuroNEET – NEET Preparation Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Simple CSS (you can move to css/styles.css later) -->
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a, #1d4ed8);
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.12);
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --neon: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top left, #1d4ed8, #020617 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      padding: 24px 16px 32px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      animation: fadeDown 0.9s ease-out;
+    }
+
+    .brand-name {
+      font-family: "Poppins", sans-serif;
+      font-size: clamp(2.5rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.85);
+    }
+
+    .tagline {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left column */
+    .left-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      animation: slideLeft 0.8s ease-out;
+    }
+
+    .left-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.32), transparent 55%);
+      pointer-events: none;
+    }
+
+    .left-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #e5e7eb;
+    }
+
+    .animation-box {
+      height: 200px;
+      border-radius: 20px;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.9));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .animation-circle {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #22c55e, #38bdf8, #a855f7, #f97316, #22c55e);
+      opacity: 0.35;
+      filter: blur(3px);
+      animation: spin 15s linear infinite;
+    }
+
+    .animation-inner {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 20% 0, rgba(15, 23, 42, 0.4), #020617);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 0 20px rgba(15, 23, 42, 1);
+    }
+
+    .brain-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 30% 0, #38bdf8, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .anim-text {
+      font-size: 0.8rem;
+      text-align: center;
+      color: #cbd5f5;
+      line-height: 1.35;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 4px;
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .badge {
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .left-quote-title {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .left-quote {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #e5e7eb;
+    }
+
+    /* Center column */
+    .center-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 26px;
+      position: relative;
+      padding: 20px 16px 24px;
+      text-align: center;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+      animation: fadeUp 0.9s ease-out;
+    }
+
+    .center-card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(59, 130, 246, 0.5), transparent 60%),
+        radial-gradient(circle at 0 100%, rgba(249, 115, 22, 0.3), transparent 50%);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .center-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .center-top {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .hindi-main {
+      font-family: "Poppins", sans-serif;
+      font-size: 1.4rem;
+      line-height: 1.5;
+      font-weight: 600;
+      margin: 8px 0 16px;
+      color: #e5e7eb;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .hindi-main span {
+      background: linear-gradient(90deg, #f97316, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .divider {
+      width: 60%;
+      margin: 0 auto 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.7), transparent);
+    }
+
+    .center-sub {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .center-sub span {
+      color: #a5b4fc;
+    }
+
+    /* Right column */
+    .right-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: slideRight 0.8s ease-out;
+    }
+
+    .right-title {
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .right-subnote {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+    }
+
+    .right-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .outline-btn {
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.18s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .primary-btn {
+      background: linear-gradient(90deg, #f97316, #facc15);
+      color: #0b1120;
+      box-shadow: 0 10px 25px rgba(248, 250, 252, 0.18);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 14px 35px rgba(248, 250, 252, 0.22);
+    }
+
+    .secondary-btn {
+      background: rgba(15, 23, 42, 0.85);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .secondary-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      background: rgba(15, 23, 42, 0.98);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.9);
+    }
+
+    .outline-btn {
+      background: transparent;
+      color: #93c5fd;
+      border: 1px dashed rgba(129, 140, 248, 0.7);
+    }
+
+    .outline-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.85);
+    }
+
+    .btn-label {
+      text-align: left;
+    }
+
+    .btn-title {
+      display: block;
+      font-weight: 600;
+    }
+
+    .btn-sub {
+      display: block;
+      font-size: 0.75rem;
+      color: #e5e7eb;
+      opacity: 0.8;
+    }
+
+    .btn-icon {
+      font-size: 1.1rem;
+    }
+
+    .right-contact {
+      margin-top: 2px;
+      font-size: 0.74rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .right-contact span {
+      color: #e5e7eb;
+    }
+
+    .right-contact a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .right-contact a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    /* Modal styles */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal {
+      background: #020617;
+      border-radius: 20px;
+      padding: 18px 18px 20px;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      animation: modalIn 0.25s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .close-btn {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+
+    .field input,
+    .field select {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      color: #e5e7eb;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .helper-text {
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .submit-btn {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 999px;
+      padding: 9px 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, #22c55e, #38bdf8);
+      color: #020617;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.9);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 1);
+    }
+
+    .modal-note {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .danger-text {
+      color: var(--danger);
+    }
+
+    .accent-text {
+      color: #facc15;
+    }
+
+    /* Animations */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header>
+      <div class="brand-name">NEURONEET</div>
+      <div class="tagline">NEET PREPARATION • TRACK • COMPETE • LEVEL UP</div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="main-grid">
+      <!-- LEFT: Animation + quote -->
+      <section class="left-card">
+        <div class="left-title">Train your mind for NEET</div>
+        <div class="animation-box">
+          <div class="animation-circle"></div>
+          <div class="animation-inner">
+            <div class="brain-icon">🧠</div>
+            <div class="anim-text">
+              High‑energy dashboard for Physics, Chemistry, Biology<br/>
+              Track syllabus, targets & streaks at one place.
+            </div>
+            <div class="badge-row">
+              <div class="badge">PCB Focus</div>
+              <div class="badge">Daily Streaks</div>
+            </div>
+          </div>
+        </div>
+        <div class="left-quote-title">NEET motivation</div>
+        <p class="left-quote" id="motivationQuote">
+          Dream NEET, work NEET, live NEET – the rank will follow.
+        </p>
+      </section>
+
+      <!-- CENTER: Hindi line + highlight -->
+      <section class="center-card">
+        <div class="center-inner">
+          <div class="center-top">For every serious NEET aspirant</div>
+          <div class="hindi-main">
+            पढ़ लो चाहे कहीं से,<br />
+            <span>मंज़िल का रास्ता मिलेगा यहीं से।</span>
+          </div>
+          <div class="divider"></div>
+          <div class="center-sub">
+            A focused, animated <span>NEET tracker</span> for your syllabus, daily targets,
+            leaderboard and streaks. One dashboard to see how close you are to MBBS.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Buttons + contact -->
+      <section class="right-card">
+        <div class="right-title">
+          Get started with NeuroNEET
+          <span style="font-size:0.8rem;color:#a5b4fc;">2026 Batch</span>
+        </div>
+        <div class="right-subnote">
+          Choose your option to enter the NEET dashboard world.
+        </div>
+        <div class="right-buttons">
+          <!-- Register -->
+          <button class="primary-btn" id="openRegister">
+            <span class="btn-label">
+              <span class="btn-title">If you are new candidate</span>
+              <span class="btn-sub">Register here to create your NeuroNEET ID</span>
+            </span>
+            <span class="btn-icon">➜</span>
+          </button>
+
+          <!-- Login -->
+          <button class="secondary-btn" id="openLogin">
+            <span class="btn-label">
+              <span class="btn-title">Already Registered</span>
+              <span class="btn-sub">Login to your student dashboard</span>
+            </span>
+            <span class="btn-icon">🔐</span>
+          </button>
+
+          <!-- Admin login -->
+          <button class="outline-btn" id="openAdminLogin">
+            <span class="btn-label">
+              <span class="btn-title">Admin Login</span>
+              <span class="btn-sub">Verify aspirants, manage levels & streaks</span>
+            </span>
+            <span class="btn-icon">⚙️</span>
+          </button>
+        </div>
+
+        <div class="right-contact">
+          For admin access & support:<br/>
+          E‑mail: <a href="mailto:prepifycse@gmail.com">prepifycse@gmail.com</a><br/>
+          Default Admin Password (change later): <span>Prepi@NEET@#26</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> NeuroNEET • Designed for NEET (UG) 2026 aspirants.
+    </footer>
+  </div>
+
+  <!-- STUDENT REGISTRATION MODAL -->
+  <div class="modal-backdrop" id="registerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Student Registration</div>
+        <button class="close-btn" data-close-modal="registerModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="helper-text" style="margin-bottom:8px;">
+          Fill your details carefully. Admin will verify and mail you your login ID & password.
+        </p>
+        <form id="registerForm">
+          <div class="form-grid">
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" id="regName" required />
+            </div>
+            <div class="field">
+              <label>Father's Name</label>
+              <input type="text" id="regFatherName" required />
+            </div>
+            <div class="field">
+              <label>Date of Birth</label>
+              <input type="date" id="regDob" required />
+            </div>
+            <div class="field">
+              <label>Preparation</label>
+              <select id="regPreparation" required>
+                <option value="">Select</option>
+                <option value="coaching">Coaching</option>
+                <option value="self">Self</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Studying</label>
+              <select id="regStudying" required>
+                <option value="">Select</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="dropper">Dropper</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>E‑Mail ID</label>
+              <input type="email" id="regEmail" required />
+            </div>
+            <div class="field">
+              <label>Contact Number</label>
+              <input type="tel" id="regContact" pattern="[0-9]{10}" maxlength="10" required />
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">Submit Registration</button>
+          <p class="modal-note">
+            After approval, you will receive an email with your <span class="accent-text">NeuroNEET User ID</span> and
+            password to login to your dashboard.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT LOGIN MODAL -->
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Student Login</div>
+        <button class="close-btn" data-close-modal="loginModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm">
+          <div class="form-grid">
+            <div class="field">
+              <label>Registered E‑Mail ID</label>
+              <input type="email" id="loginEmail" required />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="loginPassword" required />
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">Login</button>
+          <p class="modal-note">
+            Make sure your account is <span class="accent-text">verified by admin</span> before login.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Admin Login</div>
+        <button class="close-btn" data-close-modal="adminModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="adminLoginForm">
+          <div class="form-grid">
+            <div class="field">
+              <label>Admin E‑Mail</label>
+              <input type="email" id="adminEmail" value="prepifycse@gmail.com" required />
+            </div>
+            <div class="field">
+              <label>Admin Password</label>
+              <input type="password" id="adminPassword" value="Prepi@NEET@#26" required />
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">Login as Admin</button>
+          <p class="modal-note danger-text">
+            For security, change this default password inside the admin dashboard settings.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- BASIC JS (no backend yet, only UI behaviours) -->
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Simple quote rotation (you can later sync with dashboard quotes.js)
+    const quotes = [
+      "Dream NEET, work NEET, live NEET – the rank will follow.",
+      "Every MCQ you solve takes you one step closer to your MBBS seat.",
+      "Consistency beats talent when talent is not consistent for NEET.",
+      "Turn your doubts into questions, and your questions into concepts.",
+      "You don't need to study 24 hours; you need to study the right hours."
+    ];
+    const qIndex = new Date().getDate() % quotes.length;
+    document.getElementById("motivationQuote").textContent = quotes[qIndex];
+
+    // Modal handling
+    const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById("loginModal");
+    const adminModal = document.getElementById("adminModal");
+
+    function openModal(modal) {
+      modal.style.display = "flex";
+    }
+    function closeModal(modal) {
+      modal.style.display = "none";
+    }
+
+    document.getElementById("openRegister").addEventListener("click", () => openModal(registerModal));
+    document.getElementById("openLogin").addEventListener("click", () => openModal(loginModal));
+    document.getElementById("openAdminLogin").addEventListener("click", () => openModal(adminModal));
+
+    document.querySelectorAll("[data-close-modal]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.currentTarget.getAttribute("data-close-modal");
+        closeModal(document.getElementById(id));
+      });
+    });
+
+    // Close when clicking outside modal
+    [registerModal, loginModal, adminModal].forEach(backdrop => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) closeModal(backdrop);
+      });
+    });
+
+    // FORM SUBMIT PLACEHOLDERS – later connect to Firebase or backend
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Registration form submitted. Connect this to your backend/Firebase to save data.");
+      closeModal(registerModal);
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Student login submitted. Redirect to dashboard after auth.");
+      // window.location.href = "dashboard.html";
+    });
+
+    document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Admin login submitted. Redirect to admin dashboard after verifying credentials.");
+      // window.location.href = "admin.html";
+    });
+  </script>
+</body>
+</html>
