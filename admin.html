@@ -132,7 +132,7 @@
       color: var(--muted);
     }
 
-    /* TABS LEFT (Candidates / Leaderboard / Syllabus / Streaks) */
+    /* TABS LEFT */
     .tab-row {
       display: flex;
       gap: 6px;
@@ -326,7 +326,7 @@
       margin-top: 3px;
     }
 
-    /* MODAL for candidate view */
+    /* MODAL */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -403,7 +403,7 @@
       <div class="top-right">
         <strong id="adminDate"></strong>
         NEET (UG) 2026 Batch Admin Panel<br/>
-        <button class="btn-sm btn-ghost" onclick="alert('Implement logout logic (clear auth, redirect to index.html).');">
+        <button class="btn-sm btn-ghost" id="logoutBtn">
           Logout
         </button>
       </div>
@@ -446,38 +446,12 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- Sample row, replace with data from DB -->
-                <tr data-uid="uid_demo_1">
-                  <td>1</td>
-                  <td>Demo Aspirant</td>
-                  <td>demo@example.com</td>
-                  <td>Dropper</td>
-                  <td>Self</td>
-                  <td><span class="badge badge-pending">Pending</span></td>
-                  <td>
-                    <button class="btn-sm btn-ghost" onclick="openCandidateModal('uid_demo_1')">
-                      View
-                    </button>
-                  </td>
-                </tr>
-                <tr data-uid="uid_demo_2">
-                  <td>2</td>
-                  <td>Demo Student</td>
-                  <td>student@example.com</td>
-                  <td>12</td>
-                  <td>Coaching</td>
-                  <td><span class="badge badge-success">Verified</span></td>
-                  <td>
-                    <button class="btn-sm btn-ghost" onclick="openCandidateModal('uid_demo_2')">
-                      View
-                    </button>
-                  </td>
-                </tr>
+                <!-- Filled from backend -->
               </tbody>
             </table>
           </div>
           <div class="helper-text">
-            Tip: In full system, this table will load from database and support search by name / email.
+            Tip: This table loads from database and supports search by name / email (backend filter).
           </div>
         </div>
 
@@ -491,10 +465,10 @@
               Cycle: <span id="lbCycleLabel">--</span>
             </div>
             <div>
-              <button class="btn-sm btn-ghost" onclick="alert('Implement date filter logic with DB query.');">
+              <button class="btn-sm btn-ghost" id="btnFilterDate">
                 Filter by date
               </button>
-              <button class="btn-sm btn-primary" onclick="alert('Implement recount logic on backend.');">
+              <button class="btn-sm btn-primary" id="btnRecalculateRanks">
                 Recalculate Ranks
               </button>
             </div>
@@ -514,58 +488,11 @@
                   <th>Level Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Demo rows -->
-                <tr>
-                  <td>1</td>
-                  <td>Demo Topper</td>
-                  <td><span class="chip-level">L5</span></td>
-                  <td>120</td>
-                  <td>90</td>
-                  <td>820 / 900</td>
-                  <td>420</td>
-                  <td>15🔥</td>
-                  <td>
-                    <button class="btn-sm btn-primary" onclick="alert('Level up this student in DB.');">
-                      Level Up
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Demo Fighter</td>
-                  <td><span class="chip-level">L4</span></td>
-                  <td>110</td>
-                  <td>80</td>
-                  <td>780 / 880</td>
-                  <td>390</td>
-                  <td>13🔥</td>
-                  <td>
-                    <button class="btn-sm btn-ghost" onclick="alert('Keep same level in DB.');">
-                      Same
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Demo Consistent</td>
-                  <td><span class="chip-level">L3</span></td>
-                  <td>90</td>
-                  <td>70</td>
-                  <td>650 / 820</td>
-                  <td>340</td>
-                  <td>10🔥</td>
-                  <td>
-                    <button class="btn-sm btn-ghost" onclick="alert('Level down in DB if needed.');">
-                      Level Down
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
           <div class="helper-text">
-            After 15 days, you can select top 5 candidates to Level Up and adjust others (Same / Level Down).
+            After 15 days, select top 5 candidates to Level Up and adjust others (Same / Level Down).
           </div>
         </div>
 
@@ -586,29 +513,11 @@
                   <th>Overall %</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Demo rows -->
-                <tr>
-                  <td>1</td>
-                  <td>Demo Topper</td>
-                  <td>80%</td>
-                  <td>75%</td>
-                  <td>82%</td>
-                  <td>79%</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Demo Aspirant</td>
-                  <td>70%</td>
-                  <td>68%</td>
-                  <td>74%</td>
-                  <td>71%</td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
           <div class="helper-text">
-            In the full system, you will compute these percentages from user syllabus progress data for each subject.[file:1]
+            These percentages come from each user's syllabus progress (per subject).
           </div>
         </div>
 
@@ -623,7 +532,7 @@
               <input type="text" id="streakSearchInput" placeholder="Type student name or email" />
             </div>
             <div style="display:flex; flex-direction:column; justify-content:flex-end; gap:4px;">
-              <button class="btn-sm btn-ghost" onclick="alert('Implement search in DB by name/email.');">
+              <button class="btn-sm btn-ghost" id="btnStreakSearch">
                 Search
               </button>
             </div>
@@ -639,22 +548,7 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Demo row -->
-                <tr>
-                  <td>Demo Aspirant</td>
-                  <td>0 days</td>
-                  <td>05 Apr 2026</td>
-                  <td>
-                    <input type="number" min="0" style="width:60px; font-size:0.72rem; padding:3px 4px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:rgba(15,23,42,0.96); color:#e5e7eb;" value="3" />
-                  </td>
-                  <td>
-                    <button class="btn-sm btn-primary" onclick="alert('Update streakDays for this user in DB.');">
-                      Restore Streak
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
           <div class="helper-text">
@@ -703,7 +597,7 @@
             </div>
           </div>
           <div class="helper-text">
-            Connect these stats to your database (count registered/verified users & compute AVG syllabus % per subject).[file:1]
+            Stats connect to DB (count registered/verified users & compute average syllabus % per subject).
           </div>
         </div>
 
@@ -726,7 +620,7 @@
     </main>
 
     <footer>
-      NeuroNEET Admin • Manage NEET aspirants’ progress, levels & streaks with one panel.[file:1]
+      NeuroNEET Admin • Manage NEET aspirants’ progress, levels & streaks with one panel.
     </footer>
   </div>
 
@@ -771,7 +665,7 @@
           <div class="detail-value" id="candStatus">Pending</div>
         </div>
         <div class="helper-text">
-          On Verify, system should generate a user ID (e.g. NEET2026‑001) & password, save in DB and send email automatically.
+          On Verify, backend generates user ID (e.g. NEET2026‑001) & password, saves in DB and sends email automatically.
         </div>
         <div style="margin-top:8px; display:flex; gap:6px;">
           <button class="btn-sm btn-primary" onclick="verifyCandidate()">
@@ -786,7 +680,9 @@
   </div>
 
   <script>
-    // Basic date & cycle info
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
+
+    // Date & cycle info
     const today = new Date();
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('adminDate').textContent = today.toLocaleDateString('en-IN', dateOptions);
@@ -796,19 +692,15 @@
     const cycleStart = day <= 15 ? 1 : 16;
     const cycleEnd = day <= 15 ? 15 : new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     const cycleText = `${cycleStart}–${cycleEnd} ${monthShort} ${today.getFullYear()}`;
-
     document.getElementById('lbCycleLabel').textContent = cycleText;
     document.getElementById('summaryCycleLabel').textContent = cycleText;
 
-    // Dummy summary stats (replace with DB values)
-    document.getElementById('sumRegistered').textContent = 2;
-    document.getElementById('sumVerified').textContent = 1;
-    document.getElementById('sumActiveToday').textContent = 1;
-    document.getElementById('avgPhysics').textContent = "60%";
-    document.getElementById('avgChemistry').textContent = "55%";
-    document.getElementById('avgBiology').textContent = "65%";
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("neuroAdmin");
+      window.location.href = "index.html";
+    });
 
-    // Tabs switching
+    // Tabs
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -820,45 +712,64 @@
       });
     });
 
-    // Candidate modal demo data
-    const demoCandidates = {
-      "uid_demo_1": {
-        name: "Demo Aspirant",
-        father: "Demo Father",
-        dob: "2006-03-10",
-        preparation: "Self",
-        studying: "Dropper",
-        email: "demo@example.com",
-        contact: "9999999999",
-        status: "Pending"
-      },
-      "uid_demo_2": {
-        name: "Demo Student",
-        father: "Demo Father 2",
-        dob: "2007-07-15",
-        preparation: "Coaching",
-        studying: "12",
-        email: "student@example.com",
-        contact: "8888888888",
-        status: "Verified"
-      }
-    };
-
+    // Candidates
+    let candidates = {};
     let currentCandidateUid = null;
     const candidateModal = document.getElementById("candidateModal");
 
+    async function loadCandidates() {
+      try {
+        const res = await fetch(`${BASE_URL}?path=adminCandidates`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        const list = data.candidates || [];
+        candidates = {};
+        const tbody = document.querySelector("#candidatesTable tbody");
+        tbody.innerHTML = "";
+        list.forEach((c, idx) => {
+          candidates[c.userId] = c;
+          const tr = document.createElement("tr");
+          tr.dataset.uid = c.userId;
+          tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${c.name}</td>
+            <td>${c.email}</td>
+            <td>${c.studying}</td>
+            <td>${c.preparation}</td>
+            <td>
+              <span class="badge ${c.verified ? "badge-success" : "badge-pending"}">
+                ${c.verified ? "Verified" : "Pending"}
+              </span>
+            </td>
+            <td>
+              <button class="btn-sm btn-ghost" onclick="openCandidateModal('${c.userId}')">
+                View
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Candidates load error", err);
+      }
+    }
+
     function openCandidateModal(uid) {
       currentCandidateUid = uid;
-      const data = demoCandidates[uid];
+      const data = candidates[uid];
       if (!data) return;
-      document.getElementById("candName").textContent = data.name;
-      document.getElementById("candFather").textContent = data.father;
-      document.getElementById("candDob").textContent = data.dob;
-      document.getElementById("candPreparation").textContent = data.preparation;
-      document.getElementById("candStudying").textContent = data.studying;
-      document.getElementById("candEmail").textContent = data.email;
-      document.getElementById("candContact").textContent = data.contact;
-      document.getElementById("candStatus").textContent = data.status;
+      document.getElementById("candName").textContent = data.name || "--";
+      document.getElementById("candFather").textContent = data.fatherName || "--";
+      document.getElementById("candDob").textContent = data.dob || "--";
+      document.getElementById("candPreparation").textContent = data.preparation || "--";
+      document.getElementById("candStudying").textContent = data.studying || "--";
+      document.getElementById("candEmail").textContent = data.email || "--";
+      document.getElementById("candContact").textContent = data.contact || "--";
+      document.getElementById("candStatus").textContent = data.verified ? "Verified" : "Pending";
       candidateModal.style.display = "flex";
     }
 
@@ -867,17 +778,239 @@
       currentCandidateUid = null;
     }
 
-    function verifyCandidate() {
-      if (!currentCandidateUid) return;
-      // In real app: update DB, generate ID + password, send email
-      alert("Verification triggered. Implement backend to set verified=true & email login details.");
-      document.getElementById("candStatus").textContent = "Verified";
-      closeCandidateModal();
-    }
-
     candidateModal.addEventListener("click", (e) => {
       if (e.target === candidateModal) closeCandidateModal();
     });
+
+    async function verifyCandidate() {
+      if (!currentCandidateUid) return;
+      const c = candidates[currentCandidateUid];
+      if (!c) return;
+      try {
+        const res = await fetch(`${BASE_URL}?path=verifyCandidate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: c.userId })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Error verifying: " + data.error);
+          return;
+        }
+        alert(`Verified. Login details mailed to ${c.email}.`);
+        closeCandidateModal();
+        loadCandidates();
+        loadSummary();
+      } catch (err) {
+        console.error("Verify error", err);
+        alert("Network error. Try again.");
+      }
+    }
+
+    // Leaderboard
+    async function loadAdminLeaderboard() {
+      try {
+        const res = await fetch(`${BASE_URL}?path=adminLeaderboard`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cycle: cycleText })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        const list = data.leaderboard || [];
+        const tbody = document.querySelector("#adminLeaderboardTable tbody");
+        tbody.innerHTML = "";
+        list.forEach((r) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${r.rank}</td>
+            <td>${r.name}</td>
+            <td><span class="chip-level">L${r.level}</span></td>
+            <td>${r.topics}</td>
+            <td>${r.hours}</td>
+            <td>${r.correct} / ${r.totalQuestions}</td>
+            <td>${r.points}</td>
+            <td>${r.streak}🔥</td>
+            <td>
+              <button class="btn-sm btn-primary" onclick="levelAction('${r.userId}','up')">Level Up</button>
+              <button class="btn-sm btn-ghost" onclick="levelAction('${r.userId}','same')">Same</button>
+              <button class="btn-sm btn-ghost" onclick="levelAction('${r.userId}','down')">Level Down</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Admin leaderboard error", err);
+      }
+    }
+
+    async function levelAction(userId, action) {
+      if (!confirm(`Confirm ${action.toUpperCase()} for this student?`)) return;
+      try {
+        const res = await fetch(`${BASE_URL}?path=levelAction`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, action, cycle: cycleText })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Error: " + data.error);
+          return;
+        }
+        alert("Level updated.");
+        loadAdminLeaderboard();
+      } catch (err) {
+        console.error("Level action error", err);
+        alert("Network error. Try again.");
+      }
+    }
+
+    document.getElementById("btnRecalculateRanks").addEventListener("click", async () => {
+      if (!confirm("Recalculate ranks for this cycle?")) return;
+      try {
+        const res = await fetch(`${BASE_URL}?path=recalculateRanks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cycle: cycleText })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Error: " + data.error);
+          return;
+        }
+        alert("Ranks recalculated.");
+        loadAdminLeaderboard();
+      } catch (err) {
+        console.error("Recalc error", err);
+        alert("Network error.");
+      }
+    });
+
+    document.getElementById("btnFilterDate").addEventListener("click", () => {
+      alert("Implement custom date filter in backend if needed (extra feature).");
+    });
+
+    // Syllabus summary
+    async function loadAdminSyllabus() {
+      try {
+        const res = await fetch(`${BASE_URL}?path=adminSyllabus`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        const list = data.syllabus || [];
+        const tbody = document.querySelector("#syllabusAdminTable tbody");
+        tbody.innerHTML = "";
+        list.forEach((r) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${r.rank}</td>
+            <td>${r.name}</td>
+            <td>${r.physics}%</td>
+            <td>${r.chemistry}%</td>
+            <td>${r.biology}%</td>
+            <td>${r.overall}%</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Admin syllabus error", err);
+      }
+    }
+
+    // Streak search + update
+    document.getElementById("btnStreakSearch").addEventListener("click", loadStreaks);
+
+    async function loadStreaks() {
+      const q = document.getElementById("streakSearchInput").value.trim();
+      try {
+        const res = await fetch(`${BASE_URL}?path=adminStreaks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: q })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        const list = data.streaks || [];
+        const tbody = document.querySelector("#streaksTable tbody");
+        tbody.innerHTML = "";
+        list.forEach((s) => {
+          const tr = document.createElement("tr");
+          const inputId = `streak_input_${s.userId}`;
+          tr.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.currentStreak} days</td>
+            <td>${s.lastActive}</td>
+            <td>
+              <input type="number" id="${inputId}" min="0"
+                style="width:60px; font-size:0.72rem; padding:3px 4px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:rgba(15,23,42,0.96); color:#e5e7eb;"
+                value="${s.currentStreak}">
+            </td>
+            <td>
+              <button class="btn-sm btn-primary" onclick="updateStreak('${s.userId}','${inputId}')">
+                Restore Streak
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Streaks load error", err);
+      }
+    }
+
+    async function updateStreak(userId, inputId) {
+      const val = parseInt(document.getElementById(inputId).value) || 0;
+      if (!confirm(`Set new streak = ${val} days?`)) return;
+      try {
+        const res = await fetch(`${BASE_URL}?path=updateStreak`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, newStreak: val })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Error: " + data.error);
+          return;
+        }
+        alert("Streak updated.");
+        loadStreaks();
+      } catch (err) {
+        console.error("Update streak error", err);
+        alert("Network error.");
+      }
+    }
+
+    // Summary card
+    async function loadSummary() {
+      try {
+        const res = await fetch(`${BASE_URL}?path=adminSummary`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cycle: cycleText })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        document.getElementById("sumRegistered").textContent = data.registered || 0;
+        document.getElementById("sumVerified").textContent = data.verified || 0;
+        document.getElementById("sumActiveToday").textContent = data.activeToday || 0;
+        document.getElementById("avgPhysics").textContent = (data.avgPhysics || 0) + "%";
+        document.getElementById("avgChemistry").textContent = (data.avgChemistry || 0) + "%";
+        document.getElementById("avgBiology").textContent = (data.avgBiology || 0) + "%";
+      } catch (err) {
+        console.error("Summary load error", err);
+      }
+    }
+
+    // Init
+    (async () => {
+      await loadCandidates();
+      await loadAdminLeaderboard();
+      await loadAdminSyllabus();
+      await loadSummary();
+    })();
   </script>
 </body>
 </html>
