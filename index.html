@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-  <!-- Simple CSS (you can move to css/styles.css later) -->
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a, #1d4ed8);
@@ -78,7 +77,6 @@
       }
     }
 
-    /* Left column */
     .left-card {
       background: var(--card-bg);
       border-radius: 24px;
@@ -193,7 +191,6 @@
       color: #e5e7eb;
     }
 
-    /* Center column */
     .center-card {
       background: rgba(15, 23, 42, 0.96);
       border-radius: 26px;
@@ -263,7 +260,6 @@
       color: #a5b4fc;
     }
 
-    /* Right column */
     .right-card {
       background: var(--card-bg);
       border-radius: 24px;
@@ -396,7 +392,6 @@
       color: #64748b;
     }
 
-    /* Modal styles */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -517,7 +512,6 @@
       color: #facc15;
     }
 
-    /* Animations */
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -551,15 +545,12 @@
 </head>
 <body>
   <div class="page">
-    <!-- Header -->
     <header>
       <div class="brand-name">NEURONEET</div>
       <div class="tagline">NEET PREPARATION • TRACK • COMPETE • LEVEL UP</div>
     </header>
 
-    <!-- Main Layout -->
     <main class="main-grid">
-      <!-- LEFT: Animation + quote -->
       <section class="left-card">
         <div class="left-title">Train your mind for NEET</div>
         <div class="animation-box">
@@ -582,7 +573,6 @@
         </p>
       </section>
 
-      <!-- CENTER: Hindi line + highlight -->
       <section class="center-card">
         <div class="center-inner">
           <div class="center-top">For every serious NEET aspirant</div>
@@ -598,7 +588,6 @@
         </div>
       </section>
 
-      <!-- RIGHT: Buttons + contact -->
       <section class="right-card">
         <div class="right-title">
           Get started with NeuroNEET
@@ -608,7 +597,6 @@
           Choose your option to enter the NEET dashboard world.
         </div>
         <div class="right-buttons">
-          <!-- Register -->
           <button class="primary-btn" id="openRegister">
             <span class="btn-label">
               <span class="btn-title">If you are new candidate</span>
@@ -617,7 +605,6 @@
             <span class="btn-icon">➜</span>
           </button>
 
-          <!-- Login -->
           <button class="secondary-btn" id="openLogin">
             <span class="btn-label">
               <span class="btn-title">Already Registered</span>
@@ -626,7 +613,6 @@
             <span class="btn-icon">🔐</span>
           </button>
 
-          <!-- Admin login -->
           <button class="outline-btn" id="openAdminLogin">
             <span class="btn-label">
               <span class="btn-title">Admin Login</span>
@@ -767,12 +753,12 @@
     </div>
   </div>
 
-  <!-- BASIC JS (no backend yet, only UI behaviours) -->
   <script>
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // ==== CONFIG ====
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
 
-    // Simple quote rotation (you can later sync with dashboard quotes.js)
+    // Year & quote
+    document.getElementById("year").textContent = new Date().getFullYear();
     const quotes = [
       "Dream NEET, work NEET, live NEET – the rank will follow.",
       "Every MCQ you solve takes you one step closer to your MBBS seat.",
@@ -806,30 +792,100 @@
       });
     });
 
-    // Close when clicking outside modal
     [registerModal, loginModal, adminModal].forEach(backdrop => {
       backdrop.addEventListener("click", (e) => {
         if (e.target === backdrop) closeModal(backdrop);
       });
     });
 
-    // FORM SUBMIT PLACEHOLDERS – later connect to Firebase or backend
-    document.getElementById("registerForm").addEventListener("submit", (e) => {
+    // ==== REGISTRATION → Sheets backend ====
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert("Registration form submitted. Connect this to your backend/Firebase to save data.");
-      closeModal(registerModal);
+      const payload = {
+        name: document.getElementById("regName").value.trim(),
+        fatherName: document.getElementById("regFatherName").value.trim(),
+        dob: document.getElementById("regDob").value,
+        preparation: document.getElementById("regPreparation").value,
+        studying: document.getElementById("regStudying").value,
+        email: document.getElementById("regEmail").value.trim(),
+        contact: document.getElementById("regContact").value.trim()
+      };
+      try {
+        const res = await fetch(`${BASE_URL}?path=register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          alert("Registration submitted! Admin verify karega, phir email se ID/password aayega.\nReg ID: " + data.regId);
+          e.target.reset();
+          closeModal(registerModal);
+        } else {
+          alert("Error: " + data.error);
+        }
+      } catch (err) {
+        alert("Network error. Thodi der baad try karein.");
+        console.error(err);
+      }
     });
 
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
+    // ==== STUDENT LOGIN ====
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert("Student login submitted. Redirect to dashboard after auth.");
-      // window.location.href = "dashboard.html";
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch(`${BASE_URL}?path=login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Login failed: " + data.error);
+          return;
+        }
+        const user = data.user;
+        localStorage.setItem("neuroUser", JSON.stringify(user));
+        closeModal(loginModal);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        alert("Network error. Thodi der baad try karein.");
+        console.error(err);
+      }
     });
 
-    document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
+    // ==== ADMIN LOGIN ====
+    document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert("Admin login submitted. Redirect to admin dashboard after verifying credentials.");
-      // window.location.href = "admin.html";
+      const email = document.getElementById("adminEmail").value.trim();
+      const password = document.getElementById("adminPassword").value;
+
+      try {
+        const res = await fetch(`${BASE_URL}?path=login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Admin login failed: " + data.error);
+          return;
+        }
+        const user = data.user;
+        if (user.role !== "admin") {
+          alert("This account is not admin.");
+          return;
+        }
+        localStorage.setItem("neuroUser", JSON.stringify(user));
+        closeModal(adminModal);
+        window.location.href = "admin.html";
+      } catch (err) {
+        alert("Network error. Thodi der baad try karein.");
+        console.error(err);
+      }
     });
   </script>
 </body>
