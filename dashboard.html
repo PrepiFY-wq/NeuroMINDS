@@ -754,19 +754,7 @@
                 </div>
               </div>
               <!-- Chapter list -->
-              <div class="chapter-list" id="chapterList">
-                <!-- Dynamically filled by JS from syllabus data -->
-                <!-- Example static item: -->
-                <!--
-                <div class="chapter-item" data-chapter-id="phy_u1">
-                  <div>
-                    <div class="chapter-title">Unit 1: Physics and Measurement</div>
-                    <div class="chapter-meta">3/8 topics completed</div>
-                  </div>
-                  <div class="badge-small">Unit 1</div>
-                </div>
-                -->
-              </div>
+              <div class="chapter-list" id="chapterList"></div>
               <!-- Topic drill-down -->
               <div class="topics-panel" id="topicsPanel" style="display:none;">
                 <div class="topics-column">
@@ -774,18 +762,14 @@
                     Remaining topics
                     <span id="remainingCount">(0)</span>
                   </div>
-                  <div class="topics-list" id="remainingTopics">
-                    <!-- Checkboxes -->
-                  </div>
+                  <div class="topics-list" id="remainingTopics"></div>
                 </div>
                 <div class="topics-column">
                   <div class="topics-column-title">
                     Completed topics
                     <span id="completedCount">(0)</span>
                   </div>
-                  <div class="topics-list" id="completedTopics">
-                    <!-- Completed list -->
-                  </div>
+                  <div class="topics-list" id="completedTopics"></div>
                 </div>
               </div>
             </div>
@@ -915,9 +899,7 @@
           <div class="leaderboard-header">
             <div>
               <div class="leaderboard-title">Leaderboard – Top 5</div>
-              <div class="leaderboard-period" id="leaderboardPeriod">
-                <!-- e.g. 01–15 April 2026 -->
-              </div>
+              <div class="leaderboard-period" id="leaderboardPeriod"></div>
             </div>
           </div>
 
@@ -932,44 +914,7 @@
                   <th>Streak</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Example static rows, replace with JS-filled rows from DB -->
-                <tr>
-                  <td>1</td>
-                  <td>Demo Topper</td>
-                  <td><span class="badge-small">L5</span></td>
-                  <td>420</td>
-                  <td>15🔥</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Demo Aspirant</td>
-                  <td><span class="badge-small">L4</span></td>
-                  <td>398</td>
-                  <td>12🔥</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Demo Player</td>
-                  <td><span class="badge-small">L4</span></td>
-                  <td>372</td>
-                  <td>10🔥</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>Demo Achiever</td>
-                  <td><span class="badge-small">L3</span></td>
-                  <td>350</td>
-                  <td>9🔥</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td>Demo Fighter</td>
-                  <td><span class="badge-small">L3</span></td>
-                  <td>330</td>
-                  <td>8🔥</td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
             <div class="view-more-row">
               <button class="link-btn" id="viewMoreLeaderboard">
@@ -982,13 +927,15 @@
     </main>
 
     <footer>
-      NeuroNEET Dashboard • Version 1.0 • NEET (UG) 2026 syllabus based tracker.[file:1]
+      NeuroNEET Dashboard • Version 1.0 • NEET (UG) 2026 syllabus based tracker.
     </footer>
   </div>
 
-  <!-- BASIC DASHBOARD JS (frontend only, no real backend yet) -->
   <script>
-    // 1. DATE, DAY, QUOTE
+    // ==== CONFIG: Apps Script backend URL ====
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
+
+    // ==== 1. DATE, DAY, QUOTE ====
     const today = new Date();
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('dateInfo').textContent = today.toLocaleDateString('en-IN', dateOptions);
@@ -1005,22 +952,28 @@
     const quoteIndex = today.getDate() % quotes.length;
     document.getElementById('dailyQuote').textContent = quotes[quoteIndex];
 
-    // 2. Dummy user info (replace with real data after login)
-    const dummyUser = {
+    // ==== 2. Logged in user from localStorage ====
+    const storedUser = JSON.parse(localStorage.getItem("neuroUser") || "null");
+    if (!storedUser || !storedUser.userId) {
+      alert("Session expired. Please login again.");
+      window.location.href = "index.html";
+    }
+
+    const currentUser = storedUser || {
       name: "NeuroNEET Aspirant",
       level: 1,
       rank: "--",
       pointsTotal: 0,
       streakDays: 0
     };
-    document.getElementById('userName').textContent = dummyUser.name;
-    document.getElementById('userLevel').textContent = dummyUser.level;
-    document.getElementById('userRank').textContent = dummyUser.rank;
-    document.getElementById('userPoints').textContent = dummyUser.pointsTotal;
-    document.getElementById('userStreak').textContent = dummyUser.streakDays;
 
-    // 3. Placeholder syllabus data – you will instead load from a separate JS/DB
-    // Example structure (shortened demo – extend using NEET syllabus PDF).[file:1]
+    document.getElementById('userName').textContent = currentUser.name || "NeuroNEET Aspirant";
+    document.getElementById('userLevel').textContent = currentUser.level || 1;
+    document.getElementById('userRank').textContent = currentUser.rank || "--";
+    document.getElementById('userPoints').textContent = currentUser.pointsTotal || 0;
+    document.getElementById('userStreak').textContent = currentUser.streakDays || 0;
+
+    // ==== 3. Syllabus data (short demo) ====
     const syllabusData = {
       physics: {
         name: "Physics",
@@ -1054,7 +1007,6 @@
               "Uniform circular motion"
             ]
           }
-          // Add remaining units 3–20 from NMC syllabus
         ]
       },
       chemistry: {
@@ -1088,7 +1040,6 @@
               "Quantum numbers & orbitals"
             ]
           }
-          // Add units 3–20
         ]
       },
       biology: {
@@ -1119,13 +1070,11 @@
               "Frog systems – digestive, circulatory, respiratory, nervous, reproductive"
             ]
           }
-          // Add units 3–10
         ]
       }
     };
 
-    // Simulated user progress: map subject -> Set of completed topic keys
-    // Key format: `${chapterId}_${topicIndex}`
+    // userProgress: Sets of completed keys
     const userProgress = {
       physics: new Set(),
       chemistry: new Set(),
@@ -1135,7 +1084,7 @@
     let currentSubjectKey = "physics";
     let currentChapterId = null;
 
-    // 4. Render chapter list for selected subject
+    // ==== SYLLABUS: helpers ====
     function renderChapters() {
       const subject = syllabusData[currentSubjectKey];
       const list = document.getElementById("chapterList");
@@ -1167,7 +1116,6 @@
       document.getElementById("selectedSubjectLabel").textContent = subject.name;
     }
 
-    // 5. Render topics panel for selected chapter
     function renderTopics(chapter) {
       const panel = document.getElementById("topicsPanel");
       panel.style.display = "grid";
@@ -1189,14 +1137,11 @@
         ck.type = "checkbox";
         ck.checked = isDone;
         ck.addEventListener("change", () => {
-          if (ck.checked) {
-            userProgress[currentSubjectKey].add(key);
-          } else {
-            userProgress[currentSubjectKey].delete(key);
-          }
-          // Re-render topics & chapters progress
+          if (ck.checked) userProgress[currentSubjectKey].add(key);
+          else userProgress[currentSubjectKey].delete(key);
           renderChapters();
           renderTopics(chapter);
+          saveSyllabusProgress(); // auto-save on change
         });
         const label = document.createElement("div");
         label.textContent = topicText;
@@ -1217,7 +1162,6 @@
       document.getElementById("completedCount").textContent = `(${completedCount})`;
     }
 
-    // 6. Update progress circles and percentages
     function updateSubjectCompletion() {
       ["physics", "chemistry", "biology"].forEach(subKey => {
         const subject = syllabusData[subKey];
@@ -1239,7 +1183,6 @@
         }
       });
 
-      // Overall completion (simple average of subjects)
       const phy = parseInt(document.getElementById("physicsProgress").textContent) || 0;
       const chem = parseInt(document.getElementById("chemistryProgress").textContent) || 0;
       const bio = parseInt(document.getElementById("biologyProgress").textContent) || 0;
@@ -1247,7 +1190,6 @@
       document.getElementById("overallCompletion").textContent = overall + "%";
     }
 
-    // 7. Subject click handlers
     document.querySelectorAll(".subject-card").forEach(card => {
       card.addEventListener("click", () => {
         currentSubjectKey = card.dataset.subject;
@@ -1257,10 +1199,7 @@
       });
     });
 
-    // Initialize physics as default
-    renderChapters();
-
-    // 8. Daily targets – points calculation
+    // ==== DAILY TARGETS ====
     const topicsInput = document.getElementById("targetsTopics");
     const hoursInput = document.getElementById("targetsHours");
     const qInput = document.getElementById("targetsQuestions");
@@ -1274,7 +1213,7 @@
     const pointsTotalTodayLabel = document.getElementById("pointsTotalToday");
     const streakDaysLabel = document.getElementById("streakDaysLabel");
 
-    let streakDays = dummyUser.streakDays;
+    let streakDays = currentUser.streakDays || 0;
 
     function calculatePoints() {
       const topicsText = topicsInput.value.trim();
@@ -1290,9 +1229,7 @@
       const topicsPoints = topicsCount;
       const hoursPoints = hours;
       let accuracy = 0;
-      if (qTotal > 0) {
-        accuracy = (qCorrect / qTotal) * 100;
-      }
+      if (qTotal > 0) accuracy = (qCorrect / qTotal) * 100;
       let questionsPoints = 0;
       if (accuracy >= 90) questionsPoints = 3;
       else if (accuracy >= 80) questionsPoints = 2;
@@ -1310,7 +1247,17 @@
       pointsQuestionsLabel.textContent = questionsPoints.toString();
       pointsTotalTodayLabel.textContent = totalPoints.toFixed(1);
 
-      return totalPoints;
+      return {
+        totalPoints,
+        topicsPoints,
+        hoursPoints,
+        questionsPoints,
+        accuracy,
+        topicsCount,
+        hours,
+        qTotal,
+        qCorrect
+      };
     }
 
     document.getElementById("btnCalculatePoints").addEventListener("click", (e) => {
@@ -1318,20 +1265,93 @@
       calculatePoints();
     });
 
-    document.getElementById("btnSaveDay").addEventListener("click", (e) => {
+    document.getElementById("btnSaveDay").addEventListener("click", async (e) => {
       e.preventDefault();
-      const totalPoints = calculatePoints();
-      // Simple local streak update (replace with DB logic)
-      if (totalPoints > 0) {
-        streakDays += 1;
-      } else {
-        streakDays = 0;
+      const result = calculatePoints();
+      const payload = {
+        userId: currentUser.userId,
+        date: new Date().toISOString().slice(0, 10),
+        topicsText: topicsInput.value.trim(),
+        topicsCount: result.topicsCount,
+        hours: result.hours,
+        qTotal: result.qTotal,
+        qCorrect: result.qCorrect,
+        accuracy: result.accuracy,
+        points: result.totalPoints
+      };
+
+      try {
+        const res = await fetch(`${BASE_URL}?path=dailyTargets`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert("Save error: " + data.error);
+          return;
+        }
+        streakDays = data.newStreak;
+        streakDaysLabel.textContent = `${streakDays} days`;
+        currentUser.pointsTotal = data.newPointsTotal;
+        currentUser.streakDays = data.newStreak;
+        document.getElementById("userPoints").textContent = data.newPointsTotal;
+        document.getElementById("userStreak").textContent = data.newStreak;
+        localStorage.setItem("neuroUser", JSON.stringify(currentUser));
+        alert("Daily targets saved!");
+      } catch (err) {
+        console.error(err);
+        alert("Network error. Thodi der baad try karein.");
       }
-      streakDaysLabel.textContent = `${streakDays} days`;
-      alert("Daily targets saved (frontend demo). Connect this to your database to store permanently.");
     });
 
-    // 9. Leaderboard & levels – dummy cycle label
+    // ==== SYLLABUS SAVE/LOAD with backend ====
+    async function loadSyllabusProgress() {
+      try {
+        const res = await fetch(`${BASE_URL}?path=syllabusLoad`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUser.userId })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        userProgress.physics = new Set(
+          data.physics ? data.physics.split(",").filter(Boolean) : []
+        );
+        userProgress.chemistry = new Set(
+          data.chemistry ? data.chemistry.split(",").filter(Boolean) : []
+        );
+        userProgress.biology = new Set(
+          data.biology ? data.biology.split(",").filter(Boolean) : []
+        );
+        renderChapters();
+      } catch (err) {
+        console.error("Syllabus load error", err);
+        renderChapters();
+      }
+    }
+
+    async function saveSyllabusProgress() {
+      try {
+        const physicsKeys = Array.from(userProgress.physics);
+        const chemistryKeys = Array.from(userProgress.chemistry);
+        const biologyKeys = Array.from(userProgress.biology);
+        await fetch(`${BASE_URL}?path=syllabusSave`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: currentUser.userId,
+            physics: physicsKeys.join(","),
+            chemistry: chemistryKeys.join(","),
+            biology: biologyKeys.join(",")
+          })
+        });
+      } catch (err) {
+        console.error("Syllabus save error", err);
+      }
+    }
+
+    // ==== 9. Leaderboard & Level info ====
     const monthShort = today.toLocaleString("en-IN", { month: "short" });
     const day = today.getDate();
     const cycleStart = day <= 15 ? 1 : 16;
@@ -1340,7 +1360,6 @@
     document.getElementById("leaderboardPeriod").textContent = cycleText;
     document.getElementById("levelCycleLabel").textContent = cycleText;
 
-    // Level name suggestion – you can map 1–15 to specific names
     const levelNames = {
       1: "Level 1 – Starter Spark",
       2: "Level 2 – Concept Crusader",
@@ -1358,11 +1377,53 @@
       14: "Level 14 – Future Doctor",
       15: "Level 15 – Legend of NeuroNEET"
     };
-    document.getElementById("levelName").textContent = levelNames[dummyUser.level] || levelNames[1];
+    document.getElementById("levelName").textContent =
+      levelNames[currentUser.level] || levelNames[1];
+
+    async function loadLeaderboard(limit = 20) {
+      try {
+        const res = await fetch(`${BASE_URL}?path=leaderboard`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ limit })
+        });
+        const data = await res.json();
+        if (!data.ok) return;
+        const list = data.leaderboard || [];
+        const tbody = document.querySelector("#leaderboardTable tbody");
+        tbody.innerHTML = "";
+        list.slice(0, 5).forEach((r) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${r.rank}</td>
+            <td>${r.name}</td>
+            <td><span class="badge-small">L${r.level}</span></td>
+            <td>${r.points}</td>
+            <td>${r.streak}🔥</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        const my = list.find((r) => r.userId === currentUser.userId);
+        if (my) {
+          currentUser.rank = my.rank;
+          document.getElementById("userRank").textContent = my.rank;
+          localStorage.setItem("neuroUser", JSON.stringify(currentUser));
+        }
+      } catch (err) {
+        console.error("Leaderboard load error", err);
+      }
+    }
 
     document.getElementById("viewMoreLeaderboard").addEventListener("click", () => {
-      alert("In full version, this will open a page/modal showing top 20 students with ranks and details.");
+      alert("Later: show full top 20 leaderboard in a modal/page.");
     });
+
+    // ==== INITIALIZE ====
+    (async () => {
+      await loadSyllabusProgress();
+      await loadLeaderboard(20);
+      streakDaysLabel.textContent = `${streakDays} days`;
+    })();
   </script>
 </body>
 </html>
