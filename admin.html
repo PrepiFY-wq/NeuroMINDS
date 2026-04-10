@@ -682,6 +682,16 @@
   <script>
     const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
 
+    // Helper for POST (form-encoded, no CORS preflight)
+    async function postForm(payload) {
+      const res = await fetch(BASE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(payload).toString()
+      });
+      return res.json();
+    }
+
     // Date & cycle info
     const today = new Date();
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -696,7 +706,7 @@
     document.getElementById('summaryCycleLabel').textContent = cycleText;
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("neuroAdmin");
+      localStorage.removeItem("neuroUser");
       window.location.href = "index.html";
     });
 
@@ -719,12 +729,7 @@
 
     async function loadCandidates() {
       try {
-        const res = await fetch(`${BASE_URL}?path=adminCandidates`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ })
-        });
-        const data = await res.json();
+        const data = await postForm({ path: "adminCandidates" });
         if (!data.ok) return;
         const list = data.candidates || [];
         candidates = {};
@@ -787,12 +792,10 @@
       const c = candidates[currentCandidateUid];
       if (!c) return;
       try {
-        const res = await fetch(`${BASE_URL}?path=verifyCandidate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: c.userId })
+        const data = await postForm({
+          path: "verifyRegistration",
+          regId: c.regId      // ya jo bhi field tum backend me expect kar rahe ho
         });
-        const data = await res.json();
         if (!data.ok) {
           alert("Error verifying: " + data.error);
           return;
@@ -807,15 +810,17 @@
       }
     }
 
+    window.verifyCandidate = verifyCandidate;
+    window.openCandidateModal = openCandidateModal;
+    window.closeCandidateModal = closeCandidateModal;
+
     // Leaderboard
     async function loadAdminLeaderboard() {
       try {
-        const res = await fetch(`${BASE_URL}?path=adminLeaderboard`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cycle: cycleText })
+        const data = await postForm({
+          path: "leaderboard",
+          cycle: cycleText
         });
-        const data = await res.json();
         if (!data.ok) return;
         const list = data.leaderboard || [];
         const tbody = document.querySelector("#adminLeaderboardTable tbody");
@@ -826,9 +831,9 @@
             <td>${r.rank}</td>
             <td>${r.name}</td>
             <td><span class="chip-level">L${r.level}</span></td>
-            <td>${r.topics}</td>
-            <td>${r.hours}</td>
-            <td>${r.correct} / ${r.totalQuestions}</td>
+            <td>${r.topics || "-"}</td>
+            <td>${r.hours || "-"}</td>
+            <td>${r.correct || 0} / ${r.totalQuestions || 0}</td>
             <td>${r.points}</td>
             <td>${r.streak}🔥</td>
             <td>
@@ -847,12 +852,12 @@
     async function levelAction(userId, action) {
       if (!confirm(`Confirm ${action.toUpperCase()} for this student?`)) return;
       try {
-        const res = await fetch(`${BASE_URL}?path=levelAction`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, action, cycle: cycleText })
+        const data = await postForm({
+          path: "levelAction",
+          userId,
+          action,
+          cycle: cycleText
         });
-        const data = await res.json();
         if (!data.ok) {
           alert("Error: " + data.error);
           return;
@@ -864,16 +869,15 @@
         alert("Network error. Try again.");
       }
     }
+    window.levelAction = levelAction;
 
     document.getElementById("btnRecalculateRanks").addEventListener("click", async () => {
       if (!confirm("Recalculate ranks for this cycle?")) return;
       try {
-        const res = await fetch(`${BASE_URL}?path=recalculateRanks`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cycle: cycleText })
+        const data = await postForm({
+          path: "recalculateRanks",
+          cycle: cycleText
         });
-        const data = await res.json();
         if (!data.ok) {
           alert("Error: " + data.error);
           return;
@@ -893,12 +897,7 @@
     // Syllabus summary
     async function loadAdminSyllabus() {
       try {
-        const res = await fetch(`${BASE_URL}?path=adminSyllabus`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ })
-        });
-        const data = await res.json();
+        const data = await postForm({ path: "adminSyllabus" });
         if (!data.ok) return;
         const list = data.syllabus || [];
         const tbody = document.querySelector("#syllabusAdminTable tbody");
@@ -926,12 +925,10 @@
     async function loadStreaks() {
       const q = document.getElementById("streakSearchInput").value.trim();
       try {
-        const res = await fetch(`${BASE_URL}?path=adminStreaks`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: q })
+        const data = await postForm({
+          path: "adminStreaks",
+          query: q
         });
-        const data = await res.json();
         if (!data.ok) return;
         const list = data.streaks || [];
         const tbody = document.querySelector("#streaksTable tbody");
@@ -965,12 +962,11 @@
       const val = parseInt(document.getElementById(inputId).value) || 0;
       if (!confirm(`Set new streak = ${val} days?`)) return;
       try {
-        const res = await fetch(`${BASE_URL}?path=updateStreak`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, newStreak: val })
+        const data = await postForm({
+          path: "updateStreak",
+          userId,
+          newStreak: val
         });
-        const data = await res.json();
         if (!data.ok) {
           alert("Error: " + data.error);
           return;
@@ -982,16 +978,15 @@
         alert("Network error.");
       }
     }
+    window.updateStreak = updateStreak;
 
     // Summary card
     async function loadSummary() {
       try {
-        const res = await fetch(`${BASE_URL}?path=adminSummary`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cycle: cycleText })
+        const data = await postForm({
+          path: "adminSummary",
+          cycle: cycleText
         });
-        const data = await res.json();
         if (!data.ok) return;
         document.getElementById("sumRegistered").textContent = data.registered || 0;
         document.getElementById("sumVerified").textContent = data.verified || 0;
