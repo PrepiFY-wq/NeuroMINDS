@@ -1,21 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <title>NeuroNEET – NEET Preparation Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <title>PrepiFY | Portal Login</title>
+  <meta name="description" content="PrepiFY online examination portal login." />
+
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #0f172a, #1d4ed8);
-      --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.12);
-      --card-bg: rgba(15, 23, 42, 0.9);
-      --text-main: #e5e7eb;
-      --text-soft: #9ca3af;
-      --neon: #22c55e;
-      --danger: #ef4444;
+      --bg: #f4f1eb;
+      --surface: #ffffff;
+      --surface-soft: #f7f4ef;
+      --text: #1f1b16;
+      --muted: #6d675f;
+      --border: #ddd6cc;
+      --primary: #0f5c63;
+      --primary-hover: #0a4a50;
+      --danger: #a53b51;
+      --success: #2d7640;
+      --shadow: 0 20px 50px rgba(24, 20, 15, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #151412;
+      --surface: #1d1c1a;
+      --surface-soft: #252321;
+      --text: #f0e8de;
+      --muted: #b5aea4;
+      --border: #3a3632;
+      --primary: #5eaab1;
+      --primary-hover: #78c0c6;
+      --danger: #d36b7d;
+      --success: #78bf8a;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
     }
 
     * {
@@ -24,877 +41,679 @@
       padding: 0;
     }
 
+    html, body {
+      min-height: 100%;
+    }
+
     body {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top left, #1d4ed8, #020617 60%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
     .page {
-      width: 100%;
-      max-width: 1200px;
-      padding: 24px 16px 32px;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 520px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-      animation: fadeDown 0.9s ease-out;
+    .brand-side {
+      position: relative;
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(135deg, rgba(15, 92, 99, 0.06), transparent 45%),
+        linear-gradient(180deg, rgba(255,255,255,0.2), transparent),
+        var(--bg);
+      border-right: 1px solid var(--border);
+    }
+
+    .brand-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 72%, white));
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+      color: white;
+    }
+
+    .brand-logo svg {
+      width: 40px;
+      height: 40px;
     }
 
     .brand-name {
-      font-family: "Poppins", sans-serif;
-      font-size: clamp(2.5rem, 4vw, 3.2rem);
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-      text-shadow: 0 0 12px rgba(56, 189, 248, 0.85);
-    }
-
-    .tagline {
-      margin-top: 8px;
-      font-size: 0.95rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-    }
-
-    .main-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr) minmax(0, 1.1fr);
-      gap: 20px;
-      align-items: center;
-    }
-
-    @media (max-width: 960px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .left-card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 20px 18px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      animation: slideLeft 0.8s ease-out;
-    }
-
-    .left-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.32), transparent 55%);
-      pointer-events: none;
-    }
-
-    .left-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #e5e7eb;
-    }
-
-    .animation-box {
-      height: 200px;
-      border-radius: 20px;
-      border: 1px dashed rgba(148, 163, 184, 0.6);
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.9));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .animation-circle {
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: conic-gradient(from 180deg, #22c55e, #38bdf8, #a855f7, #f97316, #22c55e);
-      opacity: 0.35;
-      filter: blur(3px);
-      animation: spin 15s linear infinite;
-    }
-
-    .animation-inner {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      border-radius: 24px;
-      background: radial-gradient(circle at 20% 0, rgba(15, 23, 42, 0.4), #020617);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 0 20px rgba(15, 23, 42, 1);
-    }
-
-    .brain-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 18px;
-      background: radial-gradient(circle at 30% 0, #38bdf8, #1d4ed8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-
-    .anim-text {
-      font-size: 0.8rem;
-      text-align: center;
-      color: #cbd5f5;
-      line-height: 1.35;
-    }
-
-    .badge-row {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 4px;
-      font-size: 0.7rem;
-      color: #9ca3af;
-    }
-
-    .badge {
-      padding: 2px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.7);
-    }
-
-    .left-quote-title {
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .left-quote {
-      font-size: 0.88rem;
-      line-height: 1.5;
-      color: #e5e7eb;
-    }
-
-    .center-card {
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: 26px;
-      position: relative;
-      padding: 20px 16px 24px;
-      text-align: center;
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
-      animation: fadeUp 0.9s ease-out;
-    }
-
-    .center-card::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background:
-        radial-gradient(circle at 50% -10%, rgba(59, 130, 246, 0.5), transparent 60%),
-        radial-gradient(circle at 0 100%, rgba(249, 115, 22, 0.3), transparent 50%);
-      opacity: 0.22;
-      pointer-events: none;
-    }
-
-    .center-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .center-top {
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #9ca3af;
-      margin-bottom: 8px;
-    }
-
-    .hindi-main {
-      font-family: "Poppins", sans-serif;
-      font-size: 1.4rem;
-      line-height: 1.5;
-      font-weight: 600;
-      margin: 8px 0 16px;
-      color: #e5e7eb;
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-    }
-
-    .hindi-main span {
-      background: linear-gradient(90deg, #f97316, #22c55e);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .divider {
-      width: 60%;
-      margin: 0 auto 12px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.7), transparent);
-    }
-
-    .center-sub {
-      font-size: 0.85rem;
-      color: #cbd5e1;
-    }
-
-    .center-sub span {
-      color: #a5b4fc;
-    }
-
-    .right-card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 18px 18px 20px;
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      animation: slideRight 0.8s ease-out;
-    }
-
-    .right-title {
-      font-size: 0.96rem;
-      font-weight: 600;
-      color: #e5e7eb;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .right-subnote {
-      font-size: 0.76rem;
-      color: var(--text-soft);
-    }
-
-    .right-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .primary-btn,
-    .secondary-btn,
-    .outline-btn {
-      border-radius: 999px;
-      padding: 10px 16px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.18s ease;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .primary-btn {
-      background: linear-gradient(90deg, #f97316, #facc15);
-      color: #0b1120;
-      box-shadow: 0 10px 25px rgba(248, 250, 252, 0.18);
-    }
-
-    .primary-btn:hover {
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 14px 35px rgba(248, 250, 252, 0.22);
-    }
-
-    .secondary-btn {
-      background: rgba(15, 23, 42, 0.85);
-      color: #e5e7eb;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-    }
-
-    .secondary-btn:hover {
-      transform: translateY(-1px) scale(1.01);
-      background: rgba(15, 23, 42, 0.98);
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.9);
-    }
-
-    .outline-btn {
-      background: transparent;
-      color: #93c5fd;
-      border: 1px dashed rgba(129, 140, 248, 0.7);
-    }
-
-    .outline-btn:hover {
-      transform: translateY(-1px) scale(1.01);
-      background: rgba(15, 23, 42, 0.9);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.85);
-    }
-
-    .btn-label {
-      text-align: left;
-    }
-
-    .btn-title {
-      display: block;
-      font-weight: 600;
-    }
-
-    .btn-sub {
-      display: block;
-      font-size: 0.75rem;
-      color: #e5e7eb;
-      opacity: 0.8;
-    }
-
-    .btn-icon {
-      font-size: 1.1rem;
-    }
-
-    .right-contact {
-      margin-top: 2px;
-      font-size: 0.74rem;
-      color: var(--text-soft);
-      line-height: 1.5;
-    }
-
-    .right-contact span {
-      color: #e5e7eb;
-    }
-
-    .right-contact a {
-      color: #93c5fd;
-      text-decoration: none;
-    }
-
-    .right-contact a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-    }
-
-    .modal {
-      background: #020617;
-      border-radius: 20px;
-      padding: 18px 18px 20px;
-      max-width: 420px;
-      width: 100%;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-      animation: modalIn 0.25s ease-out;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .modal-title {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .close-btn {
-      border: none;
-      background: transparent;
-      color: #9ca3af;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      margin-top: 4px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
       gap: 4px;
     }
 
+    .brand-name h1 {
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-name p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .theme-toggle {
+      min-width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--surface-soft);
+    }
+
+    .brand-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .seal-card {
+      width: min(100%, 520px);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 34px;
+      text-align: center;
+    }
+
+    .seal-mark {
+      width: 124px;
+      height: 124px;
+      margin: 0 auto 20px;
+      border-radius: 32px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.22), transparent 40%),
+        linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 55%, #ffffff));
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .seal-mark svg {
+      width: 68px;
+      height: 68px;
+    }
+
+    .seal-card h2 {
+      font-size: clamp(2.1rem, 4vw, 3.5rem);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .seal-card p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 34ch;
+      margin: 0 auto;
+    }
+
+    .brand-footer {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .auth-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 24px;
+      background: var(--surface-soft);
+    }
+
+    .auth-panel {
+      width: min(100%, 430px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .auth-head {
+      margin-bottom: 22px;
+    }
+
+    .auth-head h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .auth-head p {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--surface-soft);
+      padding: 6px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
     .field label {
-      font-size: 0.8rem;
-      color: #cbd5e1;
+      font-size: 0.93rem;
+      font-weight: 600;
     }
 
     .field input,
     .field select {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.65);
-      padding: 8px 10px;
-      font-size: 0.85rem;
-      color: #e5e7eb;
+      width: 100%;
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 0 16px;
       outline: none;
-      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      transition: 0.25s ease;
     }
 
     .field input:focus,
     .field select:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
-      background: rgba(15, 23, 42, 1);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(15, 92, 99, 0.12);
     }
 
-    .helper-text {
-      font-size: 0.7rem;
-      color: #9ca3af;
+    .inline-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
     }
 
-    .submit-btn {
-      margin-top: 10px;
+    .primary-btn {
       width: 100%;
-      border-radius: 999px;
-      padding: 9px 12px;
-      border: none;
+      min-height: 52px;
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
       cursor: pointer;
-      background: linear-gradient(90deg, #22c55e, #38bdf8);
-      color: #020617;
-      font-size: 0.9rem;
-      font-weight: 600;
-      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.9);
-      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      transition: 0.25s ease;
+      margin-top: 4px;
     }
 
-    .submit-btn:hover {
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 16px 36px rgba(15, 23, 42, 1);
+    .primary-btn:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
     }
 
-    .modal-note {
-      margin-top: 6px;
-      font-size: 0.75rem;
-      color: #9ca3af;
+    .status-box {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      font-size: 0.94rem;
     }
 
-    .danger-text {
+    .status-box.show {
+      display: block;
+    }
+
+    .status-box.success {
+      color: var(--success);
+      border-color: color-mix(in srgb, var(--success) 34%, var(--border));
+    }
+
+    .status-box.error {
       color: var(--danger);
+      border-color: color-mix(in srgb, var(--danger) 34%, var(--border));
     }
 
-    .accent-text {
-      color: #facc15;
+    .status-box.info {
+      color: var(--primary);
+      border-color: color-mix(in srgb, var(--primary) 34%, var(--border));
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-side {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+        padding: 28px 20px;
+      }
+
+      .brand-center {
+        padding: 24px 0 8px;
+      }
+
+      .seal-card {
+        max-width: 100%;
+      }
+
+      .auth-side {
+        padding: 24px 16px 28px;
+      }
     }
 
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @media (max-width: 640px) {
+      .brand-wrap {
+        gap: 12px;
+      }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+      .brand-logo {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+      }
 
-    @keyframes slideLeft {
-      from { opacity: 0; transform: translateX(-16px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+      .brand-logo svg {
+        width: 32px;
+        height: 32px;
+      }
 
-    @keyframes slideRight {
-      from { opacity: 0; transform: translateX(16px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+      .brand-name h1 {
+        font-size: 1.6rem;
+      }
 
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      .auth-panel,
+      .seal-card {
+        padding: 22px;
+      }
+
+      .inline-row {
+        grid-template-columns: 1fr;
+      }
+
+      .seal-mark {
+        width: 104px;
+        height: 104px;
+        border-radius: 26px;
+      }
+
+      .seal-mark svg {
+        width: 56px;
+        height: 56px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="brand-name">NEURONEET</div>
-      <div class="tagline">NEET PREPARATION • TRACK • COMPETE • LEVEL UP</div>
-    </header>
-
-    <main class="main-grid">
-      <section class="left-card">
-        <div class="left-title">Train your mind for NEET</div>
-        <div class="animation-box">
-          <div class="animation-circle"></div>
-          <div class="animation-inner">
-            <div class="brain-icon">🧠</div>
-            <div class="anim-text">
-              High‑energy dashboard for Physics, Chemistry, Biology<br/>
-              Track syllabus, targets & streaks at one place.
-            </div>
-            <div class="badge-row">
-              <div class="badge">PCB Focus</div>
-              <div class="badge">Daily Streaks</div>
-            </div>
+  <main class="page">
+    <section class="brand-side">
+      <div class="brand-top">
+        <div class="brand-wrap">
+          <div class="brand-logo" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M18 19.5C18 16.46 20.46 14 23.5 14H40.5C43.54 14 46 16.46 46 19.5V44.5C46 47.54 43.54 50 40.5 50H23.5C20.46 50 18 47.54 18 44.5V19.5Z" fill="white" opacity="0.18"/>
+              <path d="M24 23H40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+              <path d="M24 31H40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+              <path d="M24 39H34" stroke="white" stroke-width="4" stroke-linecap="round"/>
+              <path d="M44 18L48 22" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-name">
+            <h1>PrepiFY</h1>
+            <p>Examination Portal</p>
           </div>
         </div>
-        <div class="left-quote-title">NEET motivation</div>
-        <p class="left-quote" id="motivationQuote">
-          Dream NEET, work NEET, live NEET – the rank will follow.
-        </p>
-      </section>
 
-      <section class="center-card">
-        <div class="center-inner">
-          <div class="center-top">For every serious NEET aspirant</div>
-          <div class="hindi-main">
-            पढ़ लो चाहे कहीं से,<br />
-            <span>मंज़िल का रास्ता मिलेगा यहीं से।</span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">🌙</button>
+      </div>
+
+      <div class="brand-center">
+        <div class="seal-card">
+          <div class="seal-mark" aria-hidden="true">
+            <svg viewBox="0 0 72 72" fill="none">
+              <path d="M36 10L56 18V34C56 46.5 47.7 58 36 62C24.3 58 16 46.5 16 34V18L36 10Z" fill="white" opacity="0.18"/>
+              <path d="M28 35L34 41L45 28" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M25 21H47" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+            </svg>
           </div>
-          <div class="divider"></div>
-          <div class="center-sub">
-            A focused, animated <span>NEET tracker</span> for your syllabus, daily targets,
-            leaderboard and streaks. One dashboard to see how close you are to MBBS.
-          </div>
+          <h2>Examination Services Portal</h2>
+          <p>Authorized access for candidates and administrators.</p>
         </div>
-      </section>
+      </div>
 
-      <section class="right-card">
-        <div class="right-title">
-          Get started with NeuroNEET
-          <span style="font-size:0.8rem;color:#a5b4fc;">2026 Batch</span>
-        </div>
-        <div class="right-subnote">
-          Choose your option to enter the NEET dashboard world.
-        </div>
-        <div class="right-buttons">
-          <button class="primary-btn" id="openRegister">
-            <span class="btn-label">
-              <span class="btn-title">If you are new candidate</span>
-              <span class="btn-sub">Register here to create your NeuroNEET ID</span>
-            </span>
-            <span class="btn-icon">➜</span>
-          </button>
+      <div class="brand-footer">
+        <span id="yearText"></span>
+      </div>
+    </section>
 
-          <button class="secondary-btn" id="openLogin">
-            <span class="btn-label">
-              <span class="btn-title">Already Registered</span>
-              <span class="btn-sub">Login to your student dashboard</span>
-            </span>
-            <span class="btn-icon">🔐</span>
-          </button>
-
-          <button class="outline-btn" id="openAdminLogin">
-            <span class="btn-label">
-              <span class="btn-title">Admin Login</span>
-              <span class="btn-sub">Verify aspirants, manage levels & streaks</span>
-            </span>
-            <span class="btn-icon">⚙️</span>
-          </button>
+    <section class="auth-side">
+      <div class="auth-panel">
+        <div class="tabs" role="tablist" aria-label="Login and Register Tabs">
+          <button class="tab-btn active" type="button" id="loginTab" onclick="switchTab('login')">Login</button>
+          <button class="tab-btn" type="button" id="registerTab" onclick="switchTab('register')">Register</button>
         </div>
 
-       <div class="right-contact">
-  For support: <a href="mailto:prepifycse@gmail.com">prepifycse@gmail.com</a>
-</div>
-      </section>
-    </main>
-
-    <footer>
-      © <span id="year"></span> NeuroNEET • Designed for NEET (UG) 2026 aspirants.
-    </footer>
-  </div>
-
-  <!-- STUDENT REGISTRATION MODAL -->
-  <div class="modal-backdrop" id="registerModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Student Registration</div>
-        <button class="close-btn" data-close-modal="registerModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="helper-text" style="margin-bottom:8px;">
-          Fill your details carefully. Admin will verify and mail you your login ID & password.
-        </p>
-        <form id="registerForm">
-          <div class="form-grid">
-            <div class="field">
-              <label>Full Name</label>
-              <input type="text" id="regName" required />
-            </div>
-            <div class="field">
-              <label>Father's Name</label>
-              <input type="text" id="regFatherName" required />
-            </div>
-            <div class="field">
-              <label>Date of Birth</label>
-              <input type="date" id="regDob" required />
-            </div>
-            <div class="field">
-              <label>Preparation</label>
-              <select id="regPreparation" required>
-                <option value="">Select</option>
-                <option value="coaching">Coaching</option>
-                <option value="self">Self</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Studying</label>
-              <select id="regStudying" required>
-                <option value="">Select</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="dropper">Dropper</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>E‑Mail ID</label>
-              <input type="email" id="regEmail" required />
-            </div>
-            <div class="field">
-              <label>Contact Number</label>
-              <input type="tel" id="regContact" pattern="[0-9]{10}" maxlength="10" required />
-            </div>
+        <div id="loginForm" class="form active">
+          <div class="auth-head">
+            <h2>Portal Login</h2>
+            <p>Sign in to continue.</p>
           </div>
 
-          <button type="submit" class="submit-btn">Submit Registration</button>
-          <p class="modal-note">
-            After approval, you will receive an email with your <span class="accent-text">NeuroNEET User ID</span> and
-            password to login to your dashboard.
-          </p>
-        </form>
-      </div>
-    </div>
-  </div>
+          <form onsubmit="handleLogin(event)">
+            <div class="field-grid">
+              <div class="field">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email address" required />
+              </div>
 
-  <!-- STUDENT LOGIN MODAL -->
-  <div class="modal-backdrop" id="loginModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Student Login</div>
-        <button class="close-btn" data-close-modal="loginModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="loginForm">
-          <div class="form-grid">
-            <div class="field">
-              <label>Registered E‑Mail ID</label>
-              <input type="email" id="loginEmail" required />
+              <div class="field">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required />
+              </div>
+
+              <div class="field">
+                <label for="loginRole">Access Type</label>
+                <select id="loginRole" required>
+                  <option value="">Select access type</option>
+                  <option value="candidate">Candidate</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </div>
+
+              <button type="submit" class="primary-btn">Login</button>
             </div>
-            <div class="field">
-              <label>Password</label>
-              <input type="password" id="loginPassword" required />
-            </div>
+          </form>
+
+          <div id="loginStatus" class="status-box" aria-live="polite"></div>
+        </div>
+
+        <div id="registerForm" class="form">
+          <div class="auth-head">
+            <h2>Candidate Registration</h2>
+            <p>Create your account.</p>
           </div>
-          <button type="submit" class="submit-btn">Login</button>
-          <p class="modal-note">
-            Make sure your account is <span class="accent-text">verified by admin</span> before login.
-          </p>
-        </form>
-      </div>
-    </div>
-  </div>
 
-  <!-- ADMIN LOGIN MODAL -->
-  <div class="modal-backdrop" id="adminModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Admin Login</div>
-        <button class="close-btn" data-close-modal="adminModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="adminLoginForm">
-          <div class="form-grid">
-            <div class="field">
-              <label>Admin E‑Mail</label>
-            <input type="email" id="adminEmail" placeholder="Admin email" required />
+          <form onsubmit="handleRegister(event)">
+            <div class="field-grid">
+              <div class="inline-row">
+                <div class="field">
+                  <label for="fullName">Full Name</label>
+                  <input type="text" id="fullName" placeholder="Enter your full name" required />
+                </div>
+
+                <div class="field">
+                  <label for="examField">Exam Field</label>
+                  <select id="examField" required>
+                    <option value="">Select exam field</option>
+                    <option value="NEET">NEET</option>
+                    <option value="JEE">JEE</option>
+                    <option value="UPSC">UPSC</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="registerEmail">Email Address</label>
+                <input type="email" id="registerEmail" placeholder="Enter your email address" required />
+              </div>
+
+              <div class="field">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" placeholder="Create your password" minlength="6" required />
+              </div>
+
+              <div class="field">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" minlength="6" required />
+              </div>
+
+              <button type="submit" class="primary-btn">Create Account</button>
             </div>
-            <div class="field">
-              <label>Admin Password</label>
-              <input type="password" id="adminPassword" placeholder="Admin password" required />
-            </div>
-          </div>
-          <button type="submit" class="submit-btn">Login as Admin</button>
-          <p class="modal-note danger-text">
-            For security, change this default password inside the admin dashboard settings.
-          </p>
-        </form>
+          </form>
+
+          <div id="registerStatus" class="status-box" aria-live="polite"></div>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <script>
-    // ==== CONFIG ====
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbxvAwDtRIdvVnv-M5xiABNB88ZCLCp6Sv777LnqbTm-mJb9ezFn3P67PJCylBNs4ol39g/exec";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Year & quote
-    document.getElementById("year").textContent = new Date().getFullYear();
-    const quotes = [
-      "Dream NEET, work NEET, live NEET – the rank will follow.",
-      "Every MCQ you solve takes you one step closer to your MBBS seat.",
-      "Consistency beats talent when talent is not consistent for NEET.",
-      "Turn your doubts into questions, and your questions into concepts.",
-      "You don't need to study 24 hours; you need to study the right hours."
-    ];
-    const qIndex = new Date().getDate() % quotes.length;
-    document.getElementById("motivationQuote").textContent = quotes[qIndex];
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-    // Modal handling
-    const registerModal = document.getElementById("registerModal");
-    const loginModal = document.getElementById("loginModal");
-    const adminModal = document.getElementById("adminModal");
+    const isFirebaseConfigured = !Object.values(firebaseConfig).some(value => String(value).includes("YOUR_"));
 
-    function openModal(modal) {
-      modal.style.display = "flex";
-    }
-    function closeModal(modal) {
-      modal.style.display = "none";
+    let app = null;
+    let auth = null;
+    let db = null;
+
+    if (isFirebaseConfigured) {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
     }
 
-    document.getElementById("openRegister").addEventListener("click", () => openModal(registerModal));
-    document.getElementById("openLogin").addEventListener("click", () => openModal(loginModal));
-    document.getElementById("openAdminLogin").addEventListener("click", () => openModal(adminModal));
+    const loginStatus = document.getElementById("loginStatus");
+    const registerStatus = document.getElementById("registerStatus");
 
-    document.querySelectorAll("[data-close-modal]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = e.currentTarget.getAttribute("data-close-modal");
-        closeModal(document.getElementById(id));
-      });
-    });
-
-    [registerModal, loginModal, adminModal].forEach(backdrop => {
-      backdrop.addEventListener("click", (e) => {
-        if (e.target === backdrop) closeModal(backdrop);
-      });
-    });
-
-    // Helper for POST (form-encoded, no CORS preflight)
-    async function postForm(payload) {
-      const res = await fetch(BASE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(payload).toString()
-      });
-      return res.json();
+    function showStatus(el, type, message) {
+      el.className = `status-box show ${type}`;
+      el.textContent = message;
     }
 
-    // ==== REGISTRATION → Sheets backend ====
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const payload = {
-        path: "register",
-        name: document.getElementById("regName").value.trim(),
-        fatherName: document.getElementById("regFatherName").value.trim(),
-        dob: document.getElementById("regDob").value,
-        preparation: document.getElementById("regPreparation").value,
-        studying: document.getElementById("regStudying").value,
-        email: document.getElementById("regEmail").value.trim(),
-        contact: document.getElementById("regContact").value.trim()
-      };
-      try {
-        const data = await postForm(payload);
-        if (data.ok) {
-          alert(
-            "Registration submitted! Registration submitted! Admin will verify your details, then your ID and password will be sent to you by email.\nReg ID: " +
-              data.regId
-          );
-          e.target.reset();
-          closeModal(registerModal);
-        } else {
-          alert("Error: " + data.error);
-        }
-      } catch (err) {
-        alert("Network error. Please try again later");
-        console.error(err);
+    function clearStatus(el) {
+      el.className = "status-box";
+      el.textContent = "";
+    }
+
+    window.switchTab = function(tab) {
+      document.getElementById("loginTab").classList.toggle("active", tab === "login");
+      document.getElementById("registerTab").classList.toggle("active", tab === "register");
+      document.getElementById("loginForm").classList.toggle("active", tab === "login");
+      document.getElementById("registerForm").classList.toggle("active", tab === "register");
+      clearStatus(loginStatus);
+      clearStatus(registerStatus);
+    };
+
+    window.handleRegister = async function(event) {
+      event.preventDefault();
+      clearStatus(registerStatus);
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const examField = document.getElementById("examField").value;
+      const email = document.getElementById("registerEmail").value.trim();
+      const password = document.getElementById("registerPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        showStatus(registerStatus, "error", "Password and confirm password must match.");
+        return;
       }
-    });
 
-    // ==== STUDENT LOGIN ====
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+      if (!isFirebaseConfigured) {
+        showStatus(registerStatus, "info", "Add your Firebase configuration to enable live registration.");
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          fullName,
+          email,
+          examField,
+          role: "candidate",
+          approvalStatus: "pending",
+          createdAt: serverTimestamp()
+        });
+
+        showStatus(registerStatus, "success", "Registration completed successfully.");
+        event.target.reset();
+      } catch (error) {
+        showStatus(registerStatus, "error", error.message || "Registration failed.");
+      }
+    };
+
+    window.handleLogin = async function(event) {
+      event.preventDefault();
+      clearStatus(loginStatus);
+
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
+      const role = document.getElementById("loginRole").value;
 
-      const payload = {
-        path: "login",
-        email,
-        password
-      };
+      if (!isFirebaseConfigured) {
+        showStatus(loginStatus, "info", "Add your Firebase configuration to enable live login.");
+        return;
+      }
 
       try {
-        const data = await postForm(payload);
-        if (!data.ok) {
-          alert("Login failed: " + data.error);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          showStatus(loginStatus, "error", "User profile data was not found.");
           return;
         }
-        const user = data.user;
-        localStorage.setItem("neuroUser", JSON.stringify(user));
-        closeModal(loginModal);
-        window.location.href = "dashboard.html";
-      } catch (err) {
-        alert("Network error. Please try again later");
-        console.error(err);
+
+        const userData = userSnap.data();
+
+        if (userData.role !== role) {
+          showStatus(loginStatus, "error", `This account belongs to the ${userData.role} role. Please select the correct role.`);
+          return;
+        }
+
+        if (role === "candidate" && userData.approvalStatus === "pending") {
+          showStatus(loginStatus, "info", "Your account is pending approval.");
+          return;
+        }
+
+        showStatus(loginStatus, "success", "Login successful. Redirecting...");
+
+        setTimeout(() => {
+          if (role === "admin") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.href = "candidate.html";
+          }
+        }, 900);
+
+      } catch (error) {
+        showStatus(loginStatus, "error", error.message || "Login failed.");
       }
-    });
+    };
 
-    // ==== ADMIN LOGIN ====
-    document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("adminEmail").value.trim();
-      const password = document.getElementById("adminPassword").value;
+    document.getElementById("yearText").textContent = `© ${new Date().getFullYear()} PrepiFY`;
+  </script>
 
-      const payload = {
-        path: "login",
-        email,
-        password
-      };
+  <script>
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById("themeToggle");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
-      try {
-        const data = await postForm(payload);
-        if (!data.ok) {
-          alert("Admin login failed: " + data.error);
-          return;
-        }
-        const user = data.user;
-        if (user.role !== "admin") {
-          alert("This account is not admin.");
-          return;
-        }
-        localStorage.setItem("neuroUser", JSON.stringify(user));
-        closeModal(adminModal);
-        window.location.href = "admin.html";
-      } catch (err) {
-        alert("Network error. Please try again later");
-        console.error(err);
-      }
+    function applyTheme(theme) {
+      root.setAttribute("data-theme", theme);
+      toggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+      toggleBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    }
+
+    applyTheme(prefersDark.matches ? "dark" : "light");
+
+    toggleBtn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme");
+      applyTheme(current === "dark" ? "light" : "dark");
     });
   </script>
 </body>
